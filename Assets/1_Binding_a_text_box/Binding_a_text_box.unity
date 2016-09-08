@@ -967,7 +967,7 @@ MonoBehaviour:
   viewModelName: MyUI
   viewModelPropertyName: RandomizerEnabled
   uiEventName: onValueChanged
-  uiPropertyName: enabled
+  uiPropertyName: isOn
   boundComponentType: Toggle
 --- !u!114 &1723439547
 MonoBehaviour:

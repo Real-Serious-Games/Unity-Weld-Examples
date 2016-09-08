@@ -27,6 +27,8 @@ public class MyUI2 : MonoBehaviour, INotifyPropertyChanged
             sliderValue = value;
             SliderValueStr = value.ToString();
 
+            rotatingCube.transform.localEulerAngles = new Vector3(0f, sliderValue, 0f);
+
             OnPropertyChanged("SliderValue");
         }
     }
@@ -38,7 +40,12 @@ public class MyUI2 : MonoBehaviour, INotifyPropertyChanged
     /// </summary>
     private bool sliderValueStrValid = true;
 
-[Binding]
+    /// <summary>
+    /// Cube that rotates based on the sliders
+    /// </summary>
+    private GameObject rotatingCube;
+
+    [Binding]
     public string SliderValueStr
     {
         get
@@ -69,7 +76,7 @@ public class MyUI2 : MonoBehaviour, INotifyPropertyChanged
         }
     }
 
-    public ColorBlock InputFieldColor
+    public ColorBlock InputFieldColor //todo: Need a color adaptor.
     {
         get
         {
@@ -108,7 +115,8 @@ public class MyUI2 : MonoBehaviour, INotifyPropertyChanged
     // Use this for initialization
     void Start()
     {
-
+        rotatingCube = GameObject.Find("Cube");
+        rotatingCube.transform.localEulerAngles = new Vector3(0f, sliderValue, 0f); //todo: Need a vector adaptor.
     }
 
     // Update is called once per frame

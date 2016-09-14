@@ -44,6 +44,7 @@ namespace UnityUI.Binding
                 viewModelPropertyName,
                 uiPropertyName,
                 boundComponentType,
+                CreateAdapter(),
                 viewModelBinding.BoundViewModel);
 
             eventBinder = new EventBinder(this.gameObject,

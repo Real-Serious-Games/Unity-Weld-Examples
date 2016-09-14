@@ -23,10 +23,10 @@ namespace UnityUI.Binding
         /// </summary>
         public string uiPropertyName;
 
-        /// <summary>
-        /// Type of the component we're binding to.
-        /// Must be a string so because Types can't be serialised in the scene.
-        /// </summary>
+        /// <summary> 
+        /// Type of the component we're binding to. 
+        /// Must be a string so because Types can't be serialised in the scene. 
+        /// </summary> 
         public string boundComponentType;
 
         private PropertyBinder propertyBinder;
@@ -37,6 +37,7 @@ namespace UnityUI.Binding
                 viewModelPropertyName,
                 uiPropertyName,
                 boundComponentType,
+                CreateAdapter(),
                 GetViewModel());
         }
 

@@ -14,6 +14,11 @@ namespace UnityUI.Binding
     public class OneWayPropertyBinding : AbstractMemberBinding
     {
         /// <summary>
+        /// Type of the adapter we're using to adapt between the view model property and UI property.
+        /// </summary>
+        public string adapterTypeName;
+
+        /// <summary>
         /// Name of the property in the view model to bind.
         /// </summary>
         public string viewModelPropertyName;
@@ -23,10 +28,10 @@ namespace UnityUI.Binding
         /// </summary>
         public string uiPropertyName;
 
-        /// <summary>
-        /// Type of the component we're binding to.
-        /// Must be a string so because Types can't be serialised in the scene.
-        /// </summary>
+        /// <summary> 
+        /// Type of the component we're binding to. 
+        /// Must be a string so because Types can't be serialised in the scene. 
+        /// </summary> 
         public string boundComponentType;
 
         private PropertyBinder propertyBinder;
@@ -37,6 +42,7 @@ namespace UnityUI.Binding
                 viewModelPropertyName,
                 uiPropertyName,
                 boundComponentType,
+                CreateAdapter(adapterTypeName),
                 GetViewModel());
         }
 
@@ -47,11 +53,6 @@ namespace UnityUI.Binding
                 propertyBinder.Dispose();
                 propertyBinder = null;
             }
-        }
-
-        void OnDestroy()
-        {
-            Disconnect();
         }
     }
 }

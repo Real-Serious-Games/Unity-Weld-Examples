@@ -76,6 +76,31 @@ namespace UnityUI.Binding
         }
 
         /// <summary>
+        /// Find the type of the adapter with the specified name and create it.
+        /// </summary>
+        protected IAdapter CreateAdapter(string adapterTypeName)
+        {
+            if (string.IsNullOrEmpty(adapterTypeName))
+            {
+                return null;
+            }
+
+            var adapterType = Type.GetType(adapterTypeName);
+            if (adapterType == null)
+            {
+                throw new ApplicationException("Could not find adapter type '" + adapterTypeName + "'.");
+            }
+
+            if (!typeof(IAdapter).IsAssignableFrom(adapterType))
+            {
+                throw new ApplicationException("Type '" + adapterTypeName + "' does not implement IAdapter and " +
+                    "cannot be used as an adapter.");
+            }
+
+            return (IAdapter)Activator.CreateInstance(adapterType);
+        }
+
+        /// <summary>
         /// Connect to all the attached view models
         /// </summary>
         public abstract void Connect();
@@ -84,5 +109,13 @@ namespace UnityUI.Binding
         /// Disconnect from all attached view models.
         /// </summary>
         public abstract void Disconnect();
+
+        /// <summary>
+        /// Clean up when the game object is destroyed.
+        /// </summary>
+        public void OnDestroy()
+        {
+            Disconnect();
+        }
     }
 }

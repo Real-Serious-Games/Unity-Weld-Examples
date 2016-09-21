@@ -293,10 +293,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99bba41ef755f1c4a86338d1798e59b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI4
+  viewModelName: MyUI5
+  adapterTypeName: 
   viewModelMethodName: ActivateNameTab
   boundComponentType: Button
   uiEventName: onClick
+  adapterTypeName: 
 --- !u!1 &84525599
 GameObject:
   m_ObjectHideFlags: 0
@@ -959,9 +961,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelName: NameTab
+  adapterTypeName: 
   viewModelPropertyName: FirstName
   uiEventName: onValueChanged
   uiPropertyName: text
+  viewModelToUIAdapterName: 
+  uiToViewModelAdapterName: 
   boundComponentType: InputField
 --- !u!114 &348337994
 MonoBehaviour:
@@ -1050,9 +1055,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelName: AddressTab
+  adapterTypeName: 
   viewModelPropertyName: Number
   uiEventName: onValueChanged
   uiPropertyName: text
+  viewModelToUIAdapterName: 
+  uiToViewModelAdapterName: 
   boundComponentType: InputField
 --- !u!114 &367991173
 MonoBehaviour:
@@ -1272,10 +1280,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99bba41ef755f1c4a86338d1798e59b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI4
+  viewModelName: MyUI5
+  adapterTypeName: 
   viewModelMethodName: ActivateAddressTab
   boundComponentType: Button
   uiEventName: onClick
+  adapterTypeName: 
 --- !u!1 &543988507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1449,6 +1459,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelName: AddressTab
+  adapterTypeName: 
+  adapterTypeName: 
   viewModelPropertyName: Street
   uiPropertyName: text
   boundComponentType: Text
@@ -1759,9 +1771,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelName: NameTab
+  adapterTypeName: 
   viewModelPropertyName: LastName
   uiEventName: onValueChanged
   uiPropertyName: text
+  viewModelToUIAdapterName: 
+  uiToViewModelAdapterName: 
   boundComponentType: InputField
 --- !u!114 &762205061
 MonoBehaviour:
@@ -2052,6 +2067,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelName: AddressTab
+  adapterTypeName: 
+  adapterTypeName: 
   viewModelPropertyName: Number
   uiPropertyName: text
   boundComponentType: Text
@@ -2141,6 +2158,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelName: NameTab
+  adapterTypeName: 
+  adapterTypeName: 
   viewModelPropertyName: LastName
   uiPropertyName: text
   boundComponentType: Text
@@ -2398,9 +2417,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelName: AddressTab
+  adapterTypeName: 
   viewModelPropertyName: Street
   uiEventName: onValueChanged
   uiPropertyName: text
+  viewModelToUIAdapterName: 
+  uiToViewModelAdapterName: 
   boundComponentType: InputField
 --- !u!114 &1116703498
 MonoBehaviour:
@@ -2638,7 +2660,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff42b068c435b34c8b825272d745e0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI4
+  viewModelName: MyUI5
+  adapterTypeName: 
   viewModelPropertyName: ActiveTab
   templates: {fileID: 1459031331}
 --- !u!1 &1445241314
@@ -2963,9 +2986,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelName: AddressTab
+  adapterTypeName: 
   viewModelPropertyName: Suburb
   uiEventName: onValueChanged
   uiPropertyName: text
+  viewModelToUIAdapterName: 
+  uiToViewModelAdapterName: 
   boundComponentType: InputField
 --- !u!114 &1530413839
 MonoBehaviour:
@@ -3183,6 +3209,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelName: NameTab
+  adapterTypeName: 
+  adapterTypeName: 
   viewModelPropertyName: FirstName
   uiPropertyName: text
   boundComponentType: Text
@@ -3678,6 +3706,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelName: AddressTab
+  adapterTypeName: 
+  adapterTypeName: 
   viewModelPropertyName: Suburb
   uiPropertyName: text
   boundComponentType: Text
@@ -3793,7 +3823,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f30ae4584d15ad4eb44ab28dc4b2cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI4
+  viewModelName: MyUI5
+  adapterTypeName: 
   boundPropertyName: NameTab
   viewModelTypeName: NameTab
 --- !u!114 &1922162642
@@ -3807,7 +3838,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f30ae4584d15ad4eb44ab28dc4b2cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI4
+  viewModelName: MyUI5
+  adapterTypeName: 
   boundPropertyName: AddressTab
   viewModelTypeName: AddressTab
 --- !u!1 &1943278913

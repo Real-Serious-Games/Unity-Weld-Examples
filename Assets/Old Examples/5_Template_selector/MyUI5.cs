@@ -4,7 +4,7 @@ using UnityUI.Binding;
 using System.ComponentModel;
 
 [Binding]
-public class MyUI4 : MonoBehaviour, INotifyPropertyChanged {
+public class MyUI5 : MonoBehaviour, INotifyPropertyChanged {
 
     [Binding]
     public NameTab NameTab

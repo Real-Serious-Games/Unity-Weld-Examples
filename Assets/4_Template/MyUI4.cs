@@ -1,0 +1,76 @@
+﻿using UnityEngine;
+using System.Collections;
+using UnityUI.Binding;
+using System.ComponentModel;
+
+[Binding]
+public class MyUI4 : MonoBehaviour, INotifyPropertyChanged {
+
+    [Binding]
+    public NameTab NameTab
+    {
+        get
+        {
+            return nameTab;
+        }
+    }
+    private NameTab nameTab = new NameTab();
+
+    [Binding]
+    public AddressTab AddressTab
+    {
+        get
+        {
+            return addressTab;
+        }
+    }
+    private AddressTab addressTab = new AddressTab();
+    
+    [Binding]
+    public Tab ActiveTab
+    {
+        get
+        {
+            return activeTab;
+        }
+        set
+        {
+            if (activeTab == value)
+            {
+                return;
+            }
+
+            activeTab = value;
+
+            OnPropertyChanged("ActiveTab");
+        }
+    }
+    private Tab activeTab = null;
+
+    void Awake()
+    {
+        ActiveTab = nameTab;
+    }
+
+    [Binding]
+    public void ActivateNameTab()
+    {
+        ActiveTab = nameTab;
+    }
+
+    [Binding]
+    public void ActivateAddressTab()
+    {
+        ActiveTab = addressTab;
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    private void OnPropertyChanged(string propertyName)
+    {
+        if (PropertyChanged != null)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+}

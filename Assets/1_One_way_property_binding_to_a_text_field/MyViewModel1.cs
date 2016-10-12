@@ -4,7 +4,7 @@ using UnityUI.Binding;
 using System.ComponentModel;
 
 [Binding]
-public class MyUI1 : MonoBehaviour, INotifyPropertyChanged
+public class MyViewModel1 : MonoBehaviour, INotifyPropertyChanged
 {
     private float timer = 0;
 

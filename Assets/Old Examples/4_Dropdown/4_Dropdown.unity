@@ -418,7 +418,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Option A
+  m_Text: 
 --- !u!222 &708116174
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -655,13 +655,7 @@ MonoBehaviour:
   m_ItemImage: {fileID: 0}
   m_Value: 0
   m_Options:
-    m_Options:
-    - m_Text: Option A
-      m_Image: {fileID: 0}
-    - m_Text: Option B
-      m_Image: {fileID: 0}
-    - m_Text: Option C
-      m_Image: {fileID: 0}
+    m_Options: []
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -712,15 +706,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelName: MyUI4
-  adapterTypeName: 
   viewModelSelectionPropertyName: SelectedItem
   viewModelOptionsPropertyName: Options
-  boundComponentType: Dropdown
-  onValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityUI.Binding.DropdownBinding+DropdownStringEvent, Assembly-CSharp,
-      Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
+  selectionViewModelToUIAdapter: 
+  selectionUIToViewModelAdapter: 
+  optionsAdapter: 
 --- !u!1 &1428528498
 GameObject:
   m_ObjectHideFlags: 0
@@ -1015,8 +1007,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 499.7, y: -267}
-  m_SizeDelta: {x: 197.4, y: 15}
+  m_AnchoredPosition: {x: 499.7, y: -273}
+  m_SizeDelta: {x: 197, y: 27}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1619311952
 MonoBehaviour:

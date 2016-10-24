@@ -31,13 +31,13 @@ namespace UnityUI.Binding
         /// Name of the type of the adapter we're using to convert values from the 
         /// view model to the UI. Can be empty for no adapter.
         /// </summary>
-        public string destAdapterTypeName;
+        public string viewAdapterTypeName;
 
         /// <summary>
         /// Name of the type of the adapter we're using to conver values from the
         /// UI back to the view model. Can be empty for no adapter.
         /// </summary>
-        public string sourceAdapterTypeName;
+        public string viewModelAdapterTypeName;
 
         /// <summary>
         /// The name of the property to assign an exception to when adapter/validation fails.
@@ -81,7 +81,7 @@ namespace UnityUI.Binding
                 new PropertyEndPoint(
                     viewModel,
                     viewModelPropertyName,
-                    CreateAdapter(sourceAdapterTypeName),
+                    CreateAdapter(viewModelAdapterTypeName),
                     "view-model",
                     this
                 ),
@@ -90,7 +90,7 @@ namespace UnityUI.Binding
                 new PropertyEndPoint(
                     view,
                     uiPropertyName,
-                    CreateAdapter(destAdapterTypeName),
+                    CreateAdapter(viewAdapterTypeName),
                     "view",
                     this
                 ),

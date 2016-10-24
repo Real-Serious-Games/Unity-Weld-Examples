@@ -16,7 +16,7 @@ namespace UnityUI.Binding
         /// <summary>
         /// Type of the adapter we're using to adapt between the view model property and UI property.
         /// </summary>
-        public string adapterTypeName;
+        public string viewAdapterTypeName;
 
         /// <summary>
         /// Name of the property in the view model to bind.
@@ -64,7 +64,7 @@ namespace UnityUI.Binding
                 new PropertyEndPoint(
                     view,
                     uiPropertyName,
-                    CreateAdapter(adapterTypeName),
+                    CreateAdapter(viewAdapterTypeName),
                     "view",
                     this
                 ),

@@ -17,15 +17,27 @@ namespace UnityTools.UnityUI_Editor
             // Initialise everything
             var targetScript = (TemplateSelector)target;
 
+            var dirty = false;
+
             var bindableViews = GetBindableViews(targetScript);
             ShowPropertySelector(targetScript, bindableViews);
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.PrefixLabel("Templates root object");
 
-            targetScript.templates = (GameObject)EditorGUILayout.ObjectField(targetScript.templates, typeof(GameObject), true);
+            var newTemplates = (GameObject)EditorGUILayout.ObjectField(targetScript.templates, typeof(GameObject), true);
+            if (targetScript.templates != newTemplates)
+            {
+                targetScript.templates = newTemplates;
+                dirty = true;
+            }
 
             EditorGUILayout.EndHorizontal();
+
+            if (dirty)
+            {
+                InspectorUtils.MarkSceneDirty(targetScript.gameObject);
+            }
         }
 
         private PropertyInfo[] GetBindableViews(TemplateSelector target)
@@ -83,8 +95,26 @@ namespace UnityTools.UnityUI_Editor
         /// </summary>
         private void SetViewModelProperty(TemplateSelector target, PropertyInfo property)
         {
-            target.viewModelName = property.ReflectedType.Name;
-            target.viewModelPropertyName = property.Name;
+            var dirty = false;
+
+            var newViewModelTypeName = property.ReflectedType.Name;
+            if (target.viewModelName != newViewModelTypeName)
+            { 
+                target.viewModelName = newViewModelTypeName;
+                dirty = true;
+            }
+
+            var newViewModelPropertyName = property.Name;
+            if (target.viewModelPropertyName != newViewModelPropertyName)
+            {
+                target.viewModelPropertyName = newViewModelPropertyName;
+                dirty = true;
+            }
+
+            if (dirty)
+            {
+                InspectorUtils.MarkSceneDirty(target.gameObject);
+            }
         }
     }
 }

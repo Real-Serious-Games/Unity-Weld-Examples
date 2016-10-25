@@ -9,25 +9,26 @@ using UnityEngine.Events;
 using UnityUI;
 using UnityUI.Binding;
 using UnityUI_Editor;
+using static UnityUI.Binding.UnityEventWatcher;
 
 namespace UnityTools.Unity_Editor
 {
     [CustomEditor(typeof(EventBinding))]
     public class EventBindingEditor : Editor
     {
-        UnityEventWatcher.BindableEvent[] events;
-
         public override void OnInspectorGUI()
         {
             var targetScript = (EventBinding)target;
 
+            var dirty = false;
+
             // Get list of events we can bind to.
-            events = UnityEventWatcher.GetBindableEvents(targetScript.gameObject)
+            var events = UnityEventWatcher.GetBindableEvents(targetScript.gameObject)
                 .OrderBy(evt => evt.Name)
                 .ToArray();
 
             // Popup for the user to pick a UnityEvent on the UI to bind to.
-            var selectedEventIndex = ShowEventSelector(targetScript);
+            var selectedEventIndex = ShowEventSelector(targetScript, events);
 
             Type[] eventType = null;
             if (selectedEventIndex >= 0)
@@ -35,20 +36,36 @@ namespace UnityTools.Unity_Editor
                 eventType = events[selectedEventIndex].GetEventTypes();
 
                 // Save properties on the target script so they'll be serialised into the scene
-                targetScript.uiEventName = events[selectedEventIndex].Name;
-                targetScript.boundComponentType = events[selectedEventIndex].ComponentType.Name;
+                var newViewEventName = events[selectedEventIndex].Name;
+                if (targetScript.uiEventName != newViewEventName)
+                {
+                    targetScript.uiEventName = newViewEventName;
+                    dirty = true;
+                }
+
+                var newBoundComponentType = events[selectedEventIndex].ComponentType.Name;
+                if (targetScript.boundComponentType != newBoundComponentType)
+                {
+                    targetScript.boundComponentType = newBoundComponentType;
+                    dirty = true;
+                }
             }
 
             var bindableViewModelMethods = GetBindableViewModelMethods(targetScript);
 
             // Show a popup for selecting which method to bind to.
             ShowMethodSelector(targetScript, bindableViewModelMethods, eventType);
+
+            if (dirty)
+            {
+                InspectorUtils.MarkSceneDirty(targetScript.gameObject);
+            }
         }
 
         /// <summary>
         /// Draws the dropdown menu for selecting an event, returns the inxed of the selected event.
         /// </summary>
-        private int ShowEventSelector(EventBinding targetScript)
+        private int ShowEventSelector(EventBinding targetScript, BindableEvent[] events)
         {
             return EditorGUILayout.Popup(
                 new GUIContent("Event to bind to"),
@@ -138,8 +155,26 @@ namespace UnityTools.Unity_Editor
         /// </summary>
         private void SetBoundMethod(EventBinding target, MethodInfo method)
         {
-            target.viewModelName = method.ReflectedType.Name;
-            target.viewModelMethodName = method.Name;
+            var dirty = false;
+
+            var newViewModelTypeName = method.ReflectedType.Name;
+            if (target.viewModelName != newViewModelTypeName)
+            {
+                target.viewModelName = newViewModelTypeName;
+                dirty = true;
+            }
+
+            var newViewModelMethodName = method.Name;
+            if (target.viewModelMethodName != newViewModelMethodName)
+            {
+                target.viewModelMethodName = newViewModelTypeName;
+                dirty = true;
+            }
+
+            if (dirty)
+            {
+                InspectorUtils.MarkSceneDirty(target.gameObject);
+            }
         }
     }
 }

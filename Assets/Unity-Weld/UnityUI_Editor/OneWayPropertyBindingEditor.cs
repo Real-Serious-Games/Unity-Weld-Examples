@@ -17,6 +17,8 @@ namespace UnityUI_Editor
             // Initialise reference to target script
             var targetScript = (OneWayPropertyBinding)target;
 
+            var dirty = false;
+
             var uiProperties = PropertyFinder
                 .GetBindableProperties(targetScript.gameObject)
                 .OrderBy(property => property.PropertyInfo.Name)
@@ -28,8 +30,19 @@ namespace UnityUI_Editor
             if (selectedPropertyIndex >= 0)
             {
                 // Selected UI property
-                targetScript.uiPropertyName = uiProperties[selectedPropertyIndex].PropertyInfo.Name;
-                targetScript.boundComponentType = uiProperties[selectedPropertyIndex].Object.GetType().Name;
+                var newViewPropertyName = uiProperties[selectedPropertyIndex].PropertyInfo.Name;
+                if (targetScript.uiPropertyName != newViewPropertyName)
+                {
+                    targetScript.uiPropertyName = newViewPropertyName;
+                    dirty = true;
+                }
+
+                var newBoundComponentType = uiProperties[selectedPropertyIndex].Object.GetType().Name;
+                if (targetScript.boundComponentType != newBoundComponentType)
+                {
+                    targetScript.boundComponentType = newBoundComponentType;
+                    dirty = true;
+                }
 
                 viewPropertyType = uiProperties[selectedPropertyIndex].PropertyInfo.PropertyType;
             }
@@ -42,7 +55,14 @@ namespace UnityUI_Editor
                 "View adaptor",
                 adapterTypeNames,
                 targetScript.viewAdapterTypeName,
-                newValue => targetScript.viewAdapterTypeName = newValue
+                newValue =>
+                {
+                    if (targetScript.viewAdapterTypeName != newValue)
+                    {
+                        targetScript.viewAdapterTypeName = newValue;
+                        dirty = true;
+                    }
+                }
             );
 
             Type adaptedViewPropertyType = viewPropertyType;
@@ -65,6 +85,11 @@ namespace UnityUI_Editor
             // Show selector for property in the view model.
             var bindableViewModelProperties = GetBindableViewModelProperties(targetScript);
             ShowViewModelPropertySelector(targetScript, bindableViewModelProperties, adaptedViewPropertyType);
+
+            if (dirty)
+            {
+                InspectorUtils.MarkSceneDirty(targetScript.gameObject);
+            }
         }
 
         /// <summary>
@@ -147,8 +172,26 @@ namespace UnityUI_Editor
         /// </summary>
         private void SetViewModelProperty(OneWayPropertyBinding target, PropertyInfo property)
         {
-            target.viewModelName = property.ReflectedType.Name;
-            target.viewModelPropertyName = property.Name;
+            var dirty = false;
+
+            var newViewModelTypeName = property.ReflectedType.Name;
+            if (target.viewModelName != newViewModelTypeName)
+            { 
+                target.viewModelName = newViewModelTypeName;
+                dirty = true;
+            }
+
+            var newViewModelPropertyName = property.Name;
+            if (target.viewModelPropertyName != newViewModelPropertyName)
+            {
+                target.viewModelPropertyName = newViewModelPropertyName;
+                dirty = true;
+            }
+
+            if (dirty)
+            {
+                InspectorUtils.MarkSceneDirty(target.gameObject);
+            }
         }
 
         /// <summary>

@@ -8,8 +8,24 @@ using UnityEngine.UI;
 [Binding]
 public class ValidationViewModel : MonoBehaviour, INotifyPropertyChanged
 {
+    /// <summary>
+    /// Value of the slider.
+    /// </summary>
     private float sliderValue = 2.5f;
 
+    /// <summary>
+    /// Tracks when the text value is valid.
+    /// </summary>
+    private bool isValid = true;
+
+    /// <summary>
+    /// Cube that rotates based on the sliders
+    /// </summary>
+    private GameObject rotatingCube;
+
+    /// <summary>
+    /// Value of the slider.
+    /// </summary>
     [Binding]
     public float SliderValue
     {
@@ -25,7 +41,6 @@ public class ValidationViewModel : MonoBehaviour, INotifyPropertyChanged
             }
 
             sliderValue = value;
-            SliderValueStr = value.ToString();
 
             rotatingCube.transform.localEulerAngles = new Vector3(0f, sliderValue, 0f);
 
@@ -33,55 +48,26 @@ public class ValidationViewModel : MonoBehaviour, INotifyPropertyChanged
         }
     }
 
-    private string sliderValueStr = "2.5";
-
     /// <summary>
-    /// Tracks when the text value is valid.
+    /// Set to true whent the slider value input by the user is valid.
     /// </summary>
-    private bool sliderValueStrValid = true;
-
-    /// <summary>
-    /// Cube that rotates based on the sliders
-    /// </summary>
-    private GameObject rotatingCube;
-
     [Binding]
-    public string SliderValueStr
+    public bool IsValid
     {
         get
         {
-            return sliderValueStr;
+            return isValid;
         }
         set
         {
-            if (sliderValueStr == value)
+            if (isValid == value)
             {
-                return; // No change.
+                return;
             }
 
-            sliderValueStr = value;
+            isValid = value;
 
-            try
-            {
-                SliderValue = float.Parse(value);
-                sliderValueStrValid = true;
-            }
-            catch (FormatException)
-            {
-                sliderValueStrValid = false;
-            }
-
-            OnPropertyChanged("SliderValueStr");
-            OnPropertyChanged("SliderValueStrValid");
-        }
-    }
-
-    [Binding]
-    public bool SliderValueStrValid
-    {
-        get
-        {
-            return sliderValueStrValid;
+            OnPropertyChanged("IsValid");
         }
     }
 

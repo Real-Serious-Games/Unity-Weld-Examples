@@ -184,12 +184,6 @@ namespace UnityUI.Internal
                     }
                 }
 
-                // Stop at the top level
-                if (trans.GetComponent<BindingRoot>() != null)
-                {
-                    break;
-                }
-
                 trans = trans.parent;
             }
 

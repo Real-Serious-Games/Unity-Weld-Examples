@@ -279,7 +279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelName: MyViewModel1
-  adapterTypeName: 
+  viewAdapterTypeName: 
   viewModelPropertyName: Text
   uiPropertyName: text
   boundComponentType: Text
@@ -394,7 +394,6 @@ GameObject:
   - 223: {fileID: 964187568}
   - 114: {fileID: 964187567}
   - 114: {fileID: 964187566}
-  - 114: {fileID: 964187565}
   - 114: {fileID: 964187564}
   m_Layer: 5
   m_Name: Canvas
@@ -412,17 +411,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5dc40af6984ad674398ee644bf27257f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &964187565
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 964187563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68271fe2be9d5d7458de2804f76b1e1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &964187566

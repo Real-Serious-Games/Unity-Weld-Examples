@@ -280,8 +280,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewAdapterTypeName: 
   viewModelPropertyName: MyViewModel1.Text
-  uiPropertyName: text
-  boundComponentType: Text
+  uiPropertyName: Text.text
 --- !u!114 &564910992
 MonoBehaviour:
   m_ObjectHideFlags: 0

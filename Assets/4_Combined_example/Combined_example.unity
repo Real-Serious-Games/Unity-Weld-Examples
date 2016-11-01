@@ -220,8 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelMethodName: MyViewModel4.RotateCube
-  boundComponentType: Button
-  uiEventName: onClick
+  uiEventName: Button.onClick
 --- !u!114 &258931130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -574,13 +573,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelPropertyName: MyViewModel4.Text
-  uiEventName: onValueChanged
-  uiPropertyName: text
+  uiEventName: InputField.onValueChanged
+  uiPropertyName: InputField.text
   viewAdapterTypeName: 
   viewModelAdapterTypeName: 
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
-  boundComponentType: InputField
 --- !u!114 &1353110049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1019,8 +1017,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewAdapterTypeName: 
   viewModelPropertyName: MyViewModel4.Text
-  uiPropertyName: text
-  boundComponentType: Text
+  uiPropertyName: Text.text
 --- !u!114 &2055842532
 MonoBehaviour:
   m_ObjectHideFlags: 0

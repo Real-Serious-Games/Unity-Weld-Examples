@@ -583,13 +583,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelPropertyName: ValidationViewModel.SliderValue
-  uiEventName: onValueChanged
-  uiPropertyName: text
+  uiEventName: InputField.onValueChanged
+  uiPropertyName: InputField.text
   viewAdapterTypeName: FloatToStringAdapter
   viewModelAdapterTypeName: StringToFloatAdapter
   exceptionPropertyName: ValidationViewModel.IsValid
   exceptionAdapterTypeName: ExceptionValidationAdapter
-  boundComponentType: InputField
 --- !u!114 &1425463860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -699,8 +698,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewAdapterTypeName: ColorValidationAdapter
   viewModelPropertyName: ValidationViewModel.IsValid
-  uiPropertyName: colors
-  boundComponentType: InputField
+  uiPropertyName: InputField.colors
 --- !u!1 &1553998129
 GameObject:
   m_ObjectHideFlags: 0
@@ -750,13 +748,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelPropertyName: ValidationViewModel.SliderValue
-  uiEventName: onValueChanged
-  uiPropertyName: value
+  uiEventName: Slider.onValueChanged
+  uiPropertyName: Slider.value
   viewAdapterTypeName: 
   viewModelAdapterTypeName: 
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
-  boundComponentType: Slider
 --- !u!114 &1553998132
 MonoBehaviour:
   m_ObjectHideFlags: 0

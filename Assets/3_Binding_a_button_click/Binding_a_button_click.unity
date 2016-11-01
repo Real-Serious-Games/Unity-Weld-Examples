@@ -220,8 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelMethodName: MyViewModel3.RotateCube
-  boundComponentType: Button
-  uiEventName: onClick
+  uiEventName: Button.onClick
 --- !u!114 &258931130
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -280,8 +280,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewAdapterTypeName: 
   viewModelPropertyName: MyViewModel2.Text
-  uiPropertyName: text
-  boundComponentType: Text
+  uiPropertyName: Text.text
 --- !u!114 &564910992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -537,13 +536,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelPropertyName: MyViewModel2.Text
-  uiEventName: onValueChanged
-  uiPropertyName: text
+  uiEventName: InputField.onValueChanged
+  uiPropertyName: InputField.text
   viewAdapterTypeName: 
   viewModelAdapterTypeName: 
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
-  boundComponentType: InputField
 --- !u!114 &1425463860
 MonoBehaviour:
   m_ObjectHideFlags: 0

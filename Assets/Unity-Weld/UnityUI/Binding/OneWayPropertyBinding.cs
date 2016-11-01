@@ -28,12 +28,6 @@ namespace UnityUI.Binding
         /// </summary>
         public string uiPropertyName;
 
-        /// <summary> 
-        /// Type of the component we're binding to. 
-        /// Must be a string so because Types can't be serialised in the scene. 
-        /// </summary> 
-        public string boundComponentType;
-
         /// <summary>
         /// Syncronizes the property in the view-model with the property in the view.
         /// </summary>
@@ -46,6 +40,10 @@ namespace UnityUI.Binding
 
         public override void Connect()        
         {
+            string propertyName;
+            string boundComponentType;
+            ParseEndPointReference(uiPropertyName, out propertyName, out boundComponentType);
+
             var view = GetComponent(boundComponentType);
 
             var viewModelEndPoint = MakeViewModelEndPoint(viewModelPropertyName, null);
@@ -57,7 +55,7 @@ namespace UnityUI.Binding
                 // Dest
                 new PropertyEndPoint(
                     view,
-                    uiPropertyName,
+                    propertyName,
                     CreateAdapter(viewAdapterTypeName),
                     "view",
                     this

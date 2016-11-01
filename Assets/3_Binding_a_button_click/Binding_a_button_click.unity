@@ -219,8 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99bba41ef755f1c4a86338d1798e59b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyViewModel3
-  viewModelMethodName: RotateCube
+  viewModelMethodName: MyViewModel3.RotateCube
   boundComponentType: Button
   uiEventName: onClick
 --- !u!114 &258931130

@@ -278,9 +278,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991cc7642bf36ed4db0d6d885e79b2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyViewModel2
   viewAdapterTypeName: 
-  viewModelPropertyName: Text
+  viewModelPropertyName: MyViewModel2.Text
   uiPropertyName: text
   boundComponentType: Text
 --- !u!114 &564910992
@@ -537,13 +536,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68a68221bf54d245870b87c976ce6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyViewModel2
-  viewModelPropertyName: Text
+  viewModelPropertyName: MyViewModel2.Text
   uiEventName: onValueChanged
   uiPropertyName: text
   viewAdapterTypeName: 
   viewModelAdapterTypeName: 
-  exceptionViewModelName: 
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
   boundComponentType: InputField

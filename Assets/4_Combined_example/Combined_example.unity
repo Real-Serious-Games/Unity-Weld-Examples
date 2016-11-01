@@ -219,8 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99bba41ef755f1c4a86338d1798e59b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyViewModel4
-  viewModelMethodName: RotateCube
+  viewModelMethodName: MyViewModel4.RotateCube
   boundComponentType: Button
   uiEventName: onClick
 --- !u!114 &258931130
@@ -574,13 +573,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68a68221bf54d245870b87c976ce6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyViewModel4
-  viewModelPropertyName: Text
+  viewModelPropertyName: MyViewModel4.Text
   uiEventName: onValueChanged
   uiPropertyName: text
   viewAdapterTypeName: 
   viewModelAdapterTypeName: 
-  exceptionViewModelName: 
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
   boundComponentType: InputField
@@ -1020,9 +1017,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991cc7642bf36ed4db0d6d885e79b2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyViewModel4
   viewAdapterTypeName: 
-  viewModelPropertyName: Text
+  viewModelPropertyName: MyViewModel4.Text
   uiPropertyName: text
   boundComponentType: Text
 --- !u!114 &2055842532

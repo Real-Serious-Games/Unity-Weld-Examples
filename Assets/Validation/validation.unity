@@ -582,14 +582,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68a68221bf54d245870b87c976ce6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: ValidationViewModel
-  viewModelPropertyName: SliderValue
+  viewModelPropertyName: ValidationViewModel.SliderValue
   uiEventName: onValueChanged
   uiPropertyName: text
   viewAdapterTypeName: FloatToStringAdapter
   viewModelAdapterTypeName: StringToFloatAdapter
-  exceptionViewModelName: ValidationViewModel
-  exceptionPropertyName: IsValid
+  exceptionPropertyName: ValidationViewModel.IsValid
   exceptionAdapterTypeName: ExceptionValidationAdapter
   boundComponentType: InputField
 --- !u!114 &1425463860
@@ -699,9 +697,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991cc7642bf36ed4db0d6d885e79b2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: ValidationViewModel
   viewAdapterTypeName: ColorValidationAdapter
-  viewModelPropertyName: IsValid
+  viewModelPropertyName: ValidationViewModel.IsValid
   uiPropertyName: colors
   boundComponentType: InputField
 --- !u!1 &1553998129
@@ -752,13 +749,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68a68221bf54d245870b87c976ce6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: ValidationViewModel
-  viewModelPropertyName: SliderValue
+  viewModelPropertyName: ValidationViewModel.SliderValue
   uiEventName: onValueChanged
   uiPropertyName: value
   viewAdapterTypeName: 
   viewModelAdapterTypeName: 
-  exceptionViewModelName: 
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
   boundComponentType: Slider

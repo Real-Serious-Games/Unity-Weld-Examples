@@ -278,9 +278,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991cc7642bf36ed4db0d6d885e79b2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyViewModel1
   viewAdapterTypeName: 
-  viewModelPropertyName: Text
+  viewModelPropertyName: MyViewModel1.Text
   uiPropertyName: text
   boundComponentType: Text
 --- !u!114 &564910992

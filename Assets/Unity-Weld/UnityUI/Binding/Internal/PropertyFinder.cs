@@ -8,6 +8,28 @@ using UnityEngine;
 namespace UnityUI.Binding
 {
     /// <summary>
+    /// Information needed to bind to a property on a component. 
+    /// </summary>
+    public struct BindablePropertyInfo
+    {
+        /// <summary>
+        /// PropertyInfo of the property to bind to.
+        /// </summary>
+        public PropertyInfo PropertyInfo { get; set; }
+
+        /// <summary>
+        /// Object the property belongs to.
+        /// </summary>
+        public UnityEngine.Component Object { get; set; }
+
+        public BindablePropertyInfo(PropertyInfo propertyInfo, UnityEngine.Component obj)
+        {
+            this.PropertyInfo = propertyInfo;
+            this.Object = obj;
+        }
+    }
+
+    /// <summary>
     /// Helper to find bindable properties.
     /// </summary>
     public class PropertyFinder
@@ -20,29 +42,6 @@ namespace UnityUI.Binding
             typeof(OneWayPropertyBinding),
             typeof(TwoWayPropertyBinding)
         };
-
-        /// <summary>
-        /// Information needed to bind to a property on a component. 
-        /// </summary>
-        public struct BindablePropertyInfo
-        {
-            /// <summary>
-            /// PropertyInfo of the property to bind to.
-            /// </summary>
-            public PropertyInfo PropertyInfo { get; set; }
-
-            /// <summary>
-            /// Object the property belongs to.
-            /// </summary>
-            public UnityEngine.Component Object { get; set; }
-
-            public BindablePropertyInfo(PropertyInfo propertyInfo, UnityEngine.Component obj)
-                : this()
-            {
-                PropertyInfo = propertyInfo;
-                Object = obj;
-            }
-        }
 
         /// <summary>
         /// Use reflection to find all components with properties we can bind to.

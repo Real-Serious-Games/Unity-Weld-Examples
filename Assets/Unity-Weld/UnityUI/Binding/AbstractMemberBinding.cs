@@ -10,8 +10,6 @@ namespace UnityUI.Binding
     /// </summary>
     public abstract class AbstractMemberBinding : MonoBehaviour, IMemberBinding
     {
-
-        
         /// <summary>
         /// Initialise this binding. Used when we first start the scene.
         /// Detaches any attached view models, finds available view models afresh and then connects the binding.
@@ -40,7 +38,7 @@ namespace UnityUI.Binding
                 }
 
                 var newViewModelBinding = components                    
-                    .Select(component => component as IViewModelBinding)
+                    .Select(component => component as IViewModelProvider)
                     .Where(component => component != null)
                     .Where(viewModelBinding => viewModelBinding.ViewModelTypeName == viewModelName && (object)viewModelBinding != this)
                     .FirstOrDefault();

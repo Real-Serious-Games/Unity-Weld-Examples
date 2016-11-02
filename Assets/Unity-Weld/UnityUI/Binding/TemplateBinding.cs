@@ -16,7 +16,7 @@ namespace UnityUI.Binding
     /// <summary>
     /// Template for use in collection bindings.
     /// </summary>
-    public class TemplateBinding : IViewModelProvider, ITemplateBinding
+    public class TemplateBinding : MonoBehaviour, IViewModelProvider, ITemplateBinding
     {
         /// <summary>
         /// View to bind the UI to.

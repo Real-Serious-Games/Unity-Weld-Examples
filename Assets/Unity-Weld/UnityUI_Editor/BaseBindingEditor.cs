@@ -21,7 +21,7 @@ namespace UnityUI_Editor
         protected void UpdateProperty<TValue>(Action<TValue> setter, TValue oldValue, TValue newValue)
             where TValue : class
         {
-            if (!newValue.Equals(oldValue))
+            if (newValue != oldValue)
             {
                 setter(newValue);
 
@@ -139,6 +139,12 @@ namespace UnityUI_Editor
             }
             else
             {
+                if (selectedIndex < 0)
+                {
+                    selectedPropertyType = null;
+                    return;
+                }
+
                 selectedPropertyType = properties[selectedIndex].PropertyInfo.PropertyType;
             }
         }

@@ -705,7 +705,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8873925724842c4eb35d90b7e3b7d1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI4
   viewModelSelectionPropertyName: SelectedItem
   viewModelOptionsPropertyName: Options
   exceptionPropertyName: 
@@ -1021,11 +1020,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991cc7642bf36ed4db0d6d885e79b2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI4
-  adapterTypeName: 
+  viewAdapterTypeName: 
   viewModelPropertyName: SelectedItem
-  uiPropertyName: text
-  boundComponentType: Text
+  uiPropertyName: Text.text
 --- !u!114 &1619311953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1324,9 +1321,8 @@ GameObject:
   - 224: {fileID: 1932578691}
   - 223: {fileID: 1932578690}
   - 114: {fileID: 1932578689}
-  - 114: {fileID: 1932578686}
   - 114: {fileID: 1932578688}
-  - 114: {fileID: 1932578687}
+  - 114: {fileID: 1932578686}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1342,18 +1338,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1932578685}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68271fe2be9d5d7458de2804f76b1e1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1932578687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1932578685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e65582a185582f640a003182fef11b86, type: 3}
+  m_Script: {fileID: 11500000, guid: 63489ef16ba06a0469be9c068c63349a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1932578688

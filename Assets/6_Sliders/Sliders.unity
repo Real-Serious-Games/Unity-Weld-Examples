@@ -347,11 +347,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68a68221bf54d245870b87c976ce6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI2
-  viewModelPropertyName: SliderValue
-  uiEventName: onValueChanged
-  uiPropertyName: value
-  boundComponentType: Slider
+  viewModelPropertyName: MyViewModel6.SliderValue
+  uiEventName: Slider.onValueChanged
+  uiPropertyName: Slider.value
+  viewAdapterTypeName: 
+  viewModelAdapterTypeName: 
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
 --- !u!114 &454581836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -446,10 +448,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991cc7642bf36ed4db0d6d885e79b2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI2
-  viewModelPropertyName: SliderValueStr
-  uiPropertyName: text
-  boundComponentType: Text
+  viewAdapterTypeName: FloatToStringAdapter
+  viewModelPropertyName: MyViewModel6.SliderValue
+  uiPropertyName: Text.text
 --- !u!114 &564910992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -795,7 +796,6 @@ GameObject:
   - 223: {fileID: 964187568}
   - 114: {fileID: 964187567}
   - 114: {fileID: 964187566}
-  - 114: {fileID: 964187565}
   - 114: {fileID: 964187564}
   m_Layer: 5
   m_Name: Canvas
@@ -812,18 +812,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 964187563}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57a36e3eced0d1a4399bdd243ae8f89b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &964187565
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 964187563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68271fe2be9d5d7458de2804f76b1e1d, type: 3}
+  m_Script: {fileID: 11500000, guid: def63f38e1441fc4282aa697e1ae24a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &964187566
@@ -1053,11 +1042,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68a68221bf54d245870b87c976ce6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI2
-  viewModelPropertyName: SliderValueStr
-  uiEventName: onValueChanged
-  uiPropertyName: text
-  boundComponentType: InputField
+  viewModelPropertyName: MyViewModel6.SliderValue
+  uiEventName: InputField.onValueChange
+  uiPropertyName: InputField.text
+  viewAdapterTypeName: FloatToStringAdapter
+  viewModelAdapterTypeName: StringToFloatAdapter
+  exceptionPropertyName: MyViewModel6.IsValid
+  exceptionAdapterTypeName: ExceptionValidationAdapter
 --- !u!114 &1425463860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1165,10 +1156,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991cc7642bf36ed4db0d6d885e79b2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI2
-  viewModelPropertyName: InputFieldColor
-  uiPropertyName: colors
-  boundComponentType: InputField
+  viewAdapterTypeName: ColorValidationAdapter
+  viewModelPropertyName: MyViewModel6.IsValid
+  uiPropertyName: InputField.colors
 --- !u!1 &1553998129
 GameObject:
   m_ObjectHideFlags: 0
@@ -1217,11 +1207,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68a68221bf54d245870b87c976ce6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI2
-  viewModelPropertyName: SliderValue
-  uiEventName: onValueChanged
-  uiPropertyName: value
-  boundComponentType: Slider
+  viewModelPropertyName: MyViewModel6.SliderValue
+  uiEventName: Slider.onValueChanged
+  uiPropertyName: Slider.value
+  viewAdapterTypeName: 
+  viewModelAdapterTypeName: 
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
 --- !u!114 &1553998132
 MonoBehaviour:
   m_ObjectHideFlags: 0

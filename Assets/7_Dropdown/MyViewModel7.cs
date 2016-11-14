@@ -6,7 +6,7 @@ using System;
 using UnityEngine.UI;
 
 [Binding]
-public class MyUI4 : MonoBehaviour, INotifyPropertyChanged
+public class MyViewModel7 : MonoBehaviour, INotifyPropertyChanged
 {
     private string[] options = new string[]
     {

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace UnityUI.Binding
 {
@@ -40,6 +39,16 @@ namespace UnityUI.Binding
         /// Watches the view model property for changes.
         /// </summary>
         private PropertyWatcher propertyWatcher;
+
+        private new void Awake()
+        {
+            Assert.IsNotNull(template, "CollectionBinding must be assigned a template.");
+
+            // Templates should always be deactivated since they're only used to clone new instances.
+            template.gameObject.SetActive(false);
+
+            base.Awake();
+        }
 
         public override void Connect()
         {
@@ -116,22 +125,17 @@ namespace UnityUI.Binding
         /// </summary>
         private void AddAndInstantiateChild(object viewModel)
         {
+            Assert.IsNotNull(viewModel, "Cannot instantiate child with null view model");
+
             var newObject = Instantiate(template);
-            newObject.transform.SetParent(transform);
-            newObject.gameObject.SetActive(true);
+            newObject.transform.SetParent(transform, false);
 
             generatedChildren.Add(viewModel, newObject.gameObject);
 
-            var templateRectTransform = template.GetComponent<RectTransform>();
-            var newRectTransform = newObject.GetComponent<RectTransform>();
-            if (newRectTransform != null && templateRectTransform != null)
-            {
-                newRectTransform.localScale = templateRectTransform.localScale;
-                newRectTransform.localPosition = templateRectTransform.localPosition;
-            }
-
             // Set bound view.
             newObject.InitChildBindings(viewModel);
+
+            newObject.gameObject.SetActive(true);
         }
 
 
@@ -141,10 +145,16 @@ namespace UnityUI.Binding
         private void BindCollection()
         {
             // Bind view model.
-            var viewModelCollectionProperty = viewModel.GetType().GetProperty(viewModelPropertyName);
+            var viewModelType = viewModel.GetType();
+
+            string propertyName;
+            string viewModelName;
+            ParseEndPointReference(viewModelPropertyName, out propertyName, out viewModelName);
+
+            var viewModelCollectionProperty = viewModelType.GetProperty(propertyName);
             if (viewModelCollectionProperty == null)
             {
-                throw new ApplicationException("Expected property " + viewModelPropertyName + ", not it wasn't found on type.");
+                throw new ApplicationException("Expected property " + viewModelPropertyName + ", but it wasn't found on type " + viewModelType.Name + ".");
             }
 
             // Get value from view model.

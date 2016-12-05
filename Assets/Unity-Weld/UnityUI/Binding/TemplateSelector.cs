@@ -56,7 +56,7 @@ namespace UnityUI.Binding
             Disconnect();
 
             // Cache available templates.
-            var templatesInScene = templates.GetComponentsInChildren<TemplateBinding>();
+            var templatesInScene = templates.GetComponentsInChildren<TemplateBinding>(true);
             foreach (var template in templatesInScene)
             {
                 availableTemplates.Add(template.GetViewModelTypeName(), template);
@@ -73,7 +73,7 @@ namespace UnityUI.Binding
             );
 
             // Get property from view model.
-            viewModelProperty = viewModel.GetType().GetProperty(viewModelPropertyName);
+            viewModelProperty = viewModel.GetType().GetProperty(propertyName);
             if (viewModelProperty == null)
             {
                 throw new ApplicationException("Expected property " + viewModelPropertyName + ", but was not found.");
@@ -126,9 +126,11 @@ namespace UnityUI.Binding
             initalizedTemplate = Instantiate(selectedTemplate);
 
             initalizedTemplate.transform.SetParent(transform, false);
-            initalizedTemplate.gameObject.SetActive(true);
 
+            // Set up child bindings before we activate the template object so that they will be configured properly before trying to connect.
             initalizedTemplate.InitChildBindings(viewModelPropertyValue);
+
+            initalizedTemplate.gameObject.SetActive(true);
         }
 
         /// <summary>

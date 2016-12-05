@@ -13,7 +13,7 @@ SceneSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 6
+  serializedVersion: 7
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -37,12 +37,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
+  m_IndirectSpecularColor: {r: 0.44692558, g: 0.49678743, b: 0.57508624, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 6
+  serializedVersion: 7
   m_GIWorkflowMode: 0
-  m_LightmapsMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -53,17 +53,22 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 3
+    serializedVersion: 4
     m_Resolution: 2
     m_BakeResolution: 40
     m_TextureWidth: 1024
     m_TextureHeight: 1024
+    m_AO: 1
     m_AOMaxDistance: 1
-    m_Padding: 2
     m_CompAOExponent: 1
+    m_CompAOExponentDirect: 0
+    m_Padding: 2
     m_LightmapParameters: {fileID: 0}
+    m_LightmapsBakeMode: 1
     m_TextureCompression: 1
+    m_DirectLightInLightProbes: 1
     m_FinalGather: 0
+    m_FinalGatherFiltering: 1
     m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
   m_LightingDataAsset: {fileID: 0}
@@ -168,6 +173,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -199,6 +205,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 793803552}
   m_Father: {fileID: 177251134}
@@ -293,12 +300,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99bba41ef755f1c4a86338d1798e59b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI5
-  adapterTypeName: 
-  viewModelMethodName: ActivateNameTab
-  boundComponentType: Button
-  uiEventName: onClick
-  adapterTypeName: 
+  viewModelMethodName: MyUI5.ActivateNameTab
+  uiEventName: Button.onClick
 --- !u!1 &84525599
 GameObject:
   m_ObjectHideFlags: 0
@@ -324,15 +327,16 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 109016080}
   - {fileID: 1116703495}
   m_Father: {fileID: 722621094}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 15, y: -62.5}
+  m_SizeDelta: {x: 0, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &84525601
 MonoBehaviour:
@@ -378,6 +382,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 84525600}
   m_RootOrder: 0
@@ -436,7 +441,6 @@ GameObject:
   - 223: {fileID: 177251133}
   - 114: {fileID: 177251132}
   - 114: {fileID: 177251131}
-  - 114: {fileID: 177251130}
   - 114: {fileID: 177251135}
   m_Layer: 5
   m_Name: Canvas
@@ -445,17 +449,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &177251130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 177251129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68271fe2be9d5d7458de2804f76b1e1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &177251131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,6 +514,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 2146276790}
   - {fileID: 61293600}
@@ -571,6 +565,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1922162639}
   m_RootOrder: 0
@@ -636,7 +631,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &203086307
 RectTransform:
   m_ObjectHideFlags: 0
@@ -646,6 +641,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 348161981}
   - {fileID: 1658237946}
@@ -714,6 +710,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 348161981}
   m_RootOrder: 0
@@ -786,15 +783,16 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 261169136}
   - {fileID: 348337989}
   m_Father: {fileID: 203086307}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 15, y: -27.5}
+  m_SizeDelta: {x: 0, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &348161982
 MonoBehaviour:
@@ -843,6 +841,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 741227734}
   - {fileID: 1030296082}
@@ -960,14 +959,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68a68221bf54d245870b87c976ce6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: NameTab
-  adapterTypeName: 
-  viewModelPropertyName: FirstName
-  uiEventName: onValueChanged
-  uiPropertyName: text
-  viewModelToUIAdapterName: 
-  uiToViewModelAdapterName: 
-  boundComponentType: InputField
+  viewModelPropertyName: NameTab.FirstName
+  uiEventName: InputField.onValueChange
+  uiPropertyName: InputField.text
+  viewAdapterTypeName: 
+  viewModelAdapterTypeName: 
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
 --- !u!114 &348337994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1015,6 +1013,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1758316444}
   - {fileID: 1445241315}
@@ -1054,14 +1053,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68a68221bf54d245870b87c976ce6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: AddressTab
-  adapterTypeName: 
-  viewModelPropertyName: Number
-  uiEventName: onValueChanged
-  uiPropertyName: text
-  viewModelToUIAdapterName: 
-  uiToViewModelAdapterName: 
-  boundComponentType: InputField
+  viewModelPropertyName: AddressTab.Number
+  uiEventName: InputField.onValueChange
+  uiPropertyName: InputField.text
+  viewAdapterTypeName: 
+  viewModelAdapterTypeName: 
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
 --- !u!114 &367991173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1186,6 +1184,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 712062546}
   m_Father: {fileID: 177251134}
@@ -1280,12 +1279,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99bba41ef755f1c4a86338d1798e59b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI5
-  adapterTypeName: 
-  viewModelMethodName: ActivateAddressTab
-  boundComponentType: Button
-  uiEventName: onClick
-  adapterTypeName: 
+  viewModelMethodName: MyUI5.ActivateAddressTab
+  uiEventName: Button.onClick
 --- !u!1 &543988507
 GameObject:
   m_ObjectHideFlags: 0
@@ -1311,15 +1306,16 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 2004406872}
   - {fileID: 1530413836}
   m_Father: {fileID: 722621094}
   m_RootOrder: 2
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 15, y: -97.5}
+  m_SizeDelta: {x: 0, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &543988509
 MonoBehaviour:
@@ -1365,6 +1361,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 762205059}
   m_RootOrder: 1
@@ -1439,6 +1436,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1922162639}
   m_RootOrder: 5
@@ -1458,12 +1456,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991cc7642bf36ed4db0d6d885e79b2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: AddressTab
-  adapterTypeName: 
-  adapterTypeName: 
-  viewModelPropertyName: Street
-  uiPropertyName: text
-  boundComponentType: Text
+  viewAdapterTypeName: 
+  viewModelPropertyName: AddressTab.Street
+  uiPropertyName: Text.text
 --- !u!114 &683462170
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1529,6 +1524,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 512007630}
   m_RootOrder: 0
@@ -1594,7 +1590,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &722621094
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1604,6 +1600,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 770025886}
   - {fileID: 84525600}
@@ -1673,6 +1670,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 348337989}
   m_RootOrder: 0
@@ -1749,6 +1747,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1018735850}
   - {fileID: 571438678}
@@ -1770,14 +1769,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68a68221bf54d245870b87c976ce6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: NameTab
-  adapterTypeName: 
-  viewModelPropertyName: LastName
-  uiEventName: onValueChanged
-  uiPropertyName: text
-  viewModelToUIAdapterName: 
-  uiToViewModelAdapterName: 
-  boundComponentType: InputField
+  viewModelPropertyName: NameTab.LastName
+  uiEventName: InputField.onValueChange
+  uiPropertyName: InputField.text
+  viewAdapterTypeName: 
+  viewModelAdapterTypeName: 
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
 --- !u!114 &762205061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1917,15 +1915,16 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1589454874}
   - {fileID: 367991170}
   m_Father: {fileID: 722621094}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 15, y: -27.5}
+  m_SizeDelta: {x: 0, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &770025887
 MonoBehaviour:
@@ -1971,6 +1970,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 61293600}
   m_RootOrder: 0
@@ -2047,6 +2047,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1922162639}
   m_RootOrder: 4
@@ -2066,12 +2067,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991cc7642bf36ed4db0d6d885e79b2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: AddressTab
-  adapterTypeName: 
-  adapterTypeName: 
-  viewModelPropertyName: Number
-  uiPropertyName: text
-  boundComponentType: Text
+  viewAdapterTypeName: 
+  viewModelPropertyName: AddressTab.Number
+  uiPropertyName: Text.text
 --- !u!114 &810043759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2138,6 +2136,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1922162639}
   m_RootOrder: 2
@@ -2157,12 +2156,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991cc7642bf36ed4db0d6d885e79b2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: NameTab
-  adapterTypeName: 
-  adapterTypeName: 
-  viewModelPropertyName: LastName
-  uiPropertyName: text
-  boundComponentType: Text
+  viewAdapterTypeName: 
+  viewModelPropertyName: NameTab.LastName
+  uiPropertyName: Text.text
 --- !u!114 &916156969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2228,6 +2224,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 762205059}
   m_RootOrder: 0
@@ -2301,6 +2298,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 348337989}
   m_RootOrder: 1
@@ -2377,6 +2375,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1943278914}
   - {fileID: 1785537309}
@@ -2416,14 +2415,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68a68221bf54d245870b87c976ce6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: AddressTab
-  adapterTypeName: 
-  viewModelPropertyName: Street
-  uiEventName: onValueChanged
-  uiPropertyName: text
-  viewModelToUIAdapterName: 
-  uiToViewModelAdapterName: 
-  boundComponentType: InputField
+  viewModelPropertyName: AddressTab.Street
+  uiEventName: InputField.onValueChanged
+  uiPropertyName: InputField.text
+  viewAdapterTypeName: 
+  viewModelAdapterTypeName: 
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
 --- !u!114 &1116703498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2543,7 +2541,7 @@ Light:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1315858560}
   m_Enabled: 1
-  serializedVersion: 6
+  serializedVersion: 7
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
@@ -2553,6 +2551,7 @@ Light:
   m_Shadows:
     m_Type: 2
     m_Resolution: -1
+    m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
@@ -2565,10 +2564,10 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_Lightmapping: 4
+  m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
-  m_AreaSize: {x: 1, y: 1}
 --- !u!4 &1315858562
 Transform:
   m_ObjectHideFlags: 0
@@ -2578,6 +2577,7 @@ Transform:
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
@@ -2608,6 +2608,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 177251134}
   m_RootOrder: 3
@@ -2660,9 +2661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff42b068c435b34c8b825272d745e0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI5
-  adapterTypeName: 
-  viewModelPropertyName: ActiveTab
+  viewModelPropertyName: MyUI5.ActiveTab
   templates: {fileID: 1459031331}
 --- !u!1 &1445241314
 GameObject:
@@ -2690,6 +2689,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 367991170}
   m_RootOrder: 1
@@ -2761,6 +2761,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 203086307}
   - {fileID: 722621094}
@@ -2797,6 +2798,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1922162639}
   m_RootOrder: 3
@@ -2870,6 +2872,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1658237946}
   m_RootOrder: 0
@@ -2946,6 +2949,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1790189566}
   - {fileID: 1722170536}
@@ -2985,14 +2989,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68a68221bf54d245870b87c976ce6fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: AddressTab
-  adapterTypeName: 
-  viewModelPropertyName: Suburb
-  uiEventName: onValueChanged
-  uiPropertyName: text
-  viewModelToUIAdapterName: 
-  uiToViewModelAdapterName: 
-  boundComponentType: InputField
+  viewModelPropertyName: AddressTab.Suburb
+  uiEventName: InputField.onValueChange
+  uiPropertyName: InputField.text
+  viewAdapterTypeName: 
+  viewModelAdapterTypeName: 
+  exceptionPropertyName: 
+  exceptionAdapterTypeName: 
 --- !u!114 &1530413839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3115,6 +3118,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 770025886}
   m_RootOrder: 0
@@ -3189,6 +3193,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1922162639}
   m_RootOrder: 1
@@ -3208,12 +3213,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991cc7642bf36ed4db0d6d885e79b2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: NameTab
-  adapterTypeName: 
-  adapterTypeName: 
-  viewModelPropertyName: FirstName
-  uiPropertyName: text
-  boundComponentType: Text
+  viewAdapterTypeName: 
+  viewModelPropertyName: NameTab.FirstName
+  uiPropertyName: Text.text
 --- !u!114 &1649250967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3278,15 +3280,16 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1496462932}
   - {fileID: 762205059}
   m_Father: {fileID: 203086307}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 15, y: -62.5}
+  m_SizeDelta: {x: 0, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1658237947
 MonoBehaviour:
@@ -3332,6 +3335,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1530413836}
   m_RootOrder: 1
@@ -3405,6 +3409,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 367991170}
   m_RootOrder: 0
@@ -3478,6 +3483,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1116703495}
   m_RootOrder: 1
@@ -3551,6 +3557,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1530413836}
   m_RootOrder: 0
@@ -3656,6 +3663,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -3686,6 +3694,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1922162639}
   m_RootOrder: 6
@@ -3705,12 +3714,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 991cc7642bf36ed4db0d6d885e79b2f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: AddressTab
-  adapterTypeName: 
-  adapterTypeName: 
-  viewModelPropertyName: Suburb
-  uiPropertyName: text
-  boundComponentType: Text
+  viewAdapterTypeName: 
+  viewModelPropertyName: AddressTab.Suburb
+  uiPropertyName: Text.text
 --- !u!114 &1880919327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3777,6 +3783,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 196591004}
   - {fileID: 1649250965}
@@ -3823,9 +3830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f30ae4584d15ad4eb44ab28dc4b2cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI5
-  adapterTypeName: 
-  boundPropertyName: NameTab
+  viewModelPropertyName: MyUI5.NameTab
   viewModelTypeName: NameTab
 --- !u!114 &1922162642
 MonoBehaviour:
@@ -3838,9 +3843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f30ae4584d15ad4eb44ab28dc4b2cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewModelName: MyUI5
-  adapterTypeName: 
-  boundPropertyName: AddressTab
+  viewModelPropertyName: MyUI5.AddressTab
   viewModelTypeName: AddressTab
 --- !u!1 &1943278913
 GameObject:
@@ -3868,6 +3871,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 1116703495}
   m_RootOrder: 0
@@ -3941,6 +3945,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 543988508}
   m_RootOrder: 0
@@ -4014,6 +4019,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 177251134}
   m_RootOrder: 0

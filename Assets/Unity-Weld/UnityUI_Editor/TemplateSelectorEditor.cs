@@ -19,7 +19,7 @@ namespace UnityTools.UnityUI_Editor
             var targetScript = (TemplateSelector)target;
 
             ShowViewModelPropertyMenu(
-                "Template property",
+                new GUIContent("Template property", "Property on the view model to use for selecting templates."),
                 targetScript,
                 TypeResolver.FindBindableProperties(targetScript),
                 updatedValue => targetScript.viewModelPropertyName = updatedValue,
@@ -27,16 +27,16 @@ namespace UnityTools.UnityUI_Editor
                 property => true
             );
 
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PrefixLabel("Templates root object");
-
             UpdateProperty(
                 updatedValue => targetScript.templates = updatedValue,
                 targetScript.templates,
-                (GameObject)EditorGUILayout.ObjectField(targetScript.templates, typeof(GameObject), true)
+                (GameObject)EditorGUILayout.ObjectField(
+                    new GUIContent("Templates root object", "Parent object to the objects we want to use as templates."),
+                    targetScript.templates, 
+                    typeof(GameObject), 
+                    true
+                )
             );
-
-            EditorGUILayout.EndHorizontal();
         }
     }
 }

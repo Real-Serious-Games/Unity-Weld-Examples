@@ -18,5 +18,5 @@ public class MyViewModel3 : MonoBehaviour
     {
         var cube = GameObject.Find("Cube");
         cube.transform.localEulerAngles = new Vector3(0f, cubeRotation, 0f);
-	}
+    }
 }

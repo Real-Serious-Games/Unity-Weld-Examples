@@ -20,10 +20,11 @@ namespace UnityUI_Editor
 
             Type viewPropertyType = null;
             ShowViewPropertyMenu(
-                "View property",
+                new GUIContent("View property", "Property on the view to bind to"),
                 targetScript,
                 PropertyFinder.GetBindableProperties(targetScript.gameObject)
-                    .OrderBy(property => property.PropertyInfo.Name)
+                    .OrderBy(property => property.PropertyInfo.ReflectedType.Name)
+                    .ThenBy(property => property.PropertyInfo.Name)
                     .ToArray(),
                 updatedValue => targetScript.uiPropertyName = updatedValue,
                 targetScript.uiPropertyName,
@@ -36,7 +37,7 @@ namespace UnityUI_Editor
                 .ToArray();
 
             ShowAdapterMenu(
-                "View adaptor",
+                new GUIContent("View adapter", "Adapter that converts values sent from the view-model to the view."),
                 viewAdapterTypeNames,
                 targetScript.viewAdapterTypeName,
                 newValue =>
@@ -51,7 +52,7 @@ namespace UnityUI_Editor
 
             var adaptedViewPropertyType = AdaptTypeBackward(viewPropertyType, targetScript.viewAdapterTypeName);
             ShowViewModelPropertyMenu(
-                "View-model property",
+                new GUIContent("View-model property", "Property on the view-model to bind to."),
                 targetScript,
                 TypeResolver.FindBindableProperties(targetScript),
                 updatedValue => targetScript.viewModelPropertyName = updatedValue,

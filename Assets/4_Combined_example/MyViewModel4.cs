@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityUI.Binding;
 using System;
 using System.ComponentModel;
+using UnityWeld.Binding;
 
 [Binding]
 public class MyViewModel4 : MonoBehaviour, INotifyPropertyChanged

@@ -1,7 +1,5 @@
 ﻿using System;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityUI.Binding;
+using UnityWeld.Binding;
 
 [Adapter(typeof(Exception), typeof(bool))]
 public class ExceptionValidationAdapter : IAdapter

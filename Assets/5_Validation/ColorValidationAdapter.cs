@@ -1,7 +1,6 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityUI.Binding;
+using UnityWeld.Binding;
 
 [Adapter(typeof(bool), typeof(ColorBlock))]
 public class ColorValidationAdapter : IAdapter

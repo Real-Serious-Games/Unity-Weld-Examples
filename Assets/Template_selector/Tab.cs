@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 public abstract class Tab: INotifyPropertyChanged
 {

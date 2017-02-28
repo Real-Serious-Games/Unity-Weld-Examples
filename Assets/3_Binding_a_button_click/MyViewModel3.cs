@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityUI.Binding;
-using System;
+using UnityWeld.Binding;
 
 [Binding]
 public class MyViewModel3 : MonoBehaviour

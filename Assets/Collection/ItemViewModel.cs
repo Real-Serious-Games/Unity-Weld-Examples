@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using UnityUI.Binding;
+﻿using UnityWeld.Binding;
 
 /// <summary>
 /// View-model for items displayed in the collection.

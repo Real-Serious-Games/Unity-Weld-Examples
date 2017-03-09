@@ -29,6 +29,7 @@ sysinfo.txt
 *.apk
 *.unitypackage
 *.bak
+*.bak.meta
 
 # Swapfiles
 *.swp

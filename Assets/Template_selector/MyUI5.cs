@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.ComponentModel;
+using TemplateExample;
 using UnityWeld.Binding;
 
 [Binding]

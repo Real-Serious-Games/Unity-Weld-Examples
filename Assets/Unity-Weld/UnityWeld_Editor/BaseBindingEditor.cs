@@ -21,12 +21,14 @@ namespace UnityWeld_Editor
         protected void UpdateProperty<TValue>(Action<TValue> setter, TValue oldValue, TValue newValue)
             where TValue : class
         {
-            if (newValue != oldValue)
+            if (newValue == oldValue)
             {
-                setter(newValue);
-
-                InspectorUtils.MarkSceneDirty(((Component)target).gameObject);
+                return;
             }
+
+            setter(newValue);
+
+            InspectorUtils.MarkSceneDirty(((Component)target).gameObject);
         }
 
         /// <summary>
@@ -39,7 +41,7 @@ namespace UnityWeld_Editor
             Action<string> valueUpdated
         )
         {
-            var adapterMenu = new string[] { "None" }
+            var adapterMenu = new[] { "None" }
                 .Concat(adapterTypeNames)
                 .Select(typeName => new GUIContent(typeName))
                 .ToArray();
@@ -51,16 +53,18 @@ namespace UnityWeld_Editor
                     adapterMenu
                 );
 
-            if (newSelectionIndex != curSelectionIndex)
+            if (newSelectionIndex == curSelectionIndex)
             {
-                if (newSelectionIndex == 0)
-                {
-                    valueUpdated(null); // No adapter selected.
-                }
-                else
-                {
-                    valueUpdated(adapterTypeNames[newSelectionIndex - 1]); // -1 to account for 'None'.
-                }
+                return;
+            }
+
+            if (newSelectionIndex == 0)
+            {
+                valueUpdated(null); // No adapter selected.
+            }
+            else
+            {
+                valueUpdated(adapterTypeNames[newSelectionIndex - 1]); // -1 to account for 'None'.
             }
         }
 
@@ -69,7 +73,6 @@ namespace UnityWeld_Editor
         /// </summary>
         protected void ShowViewModelPropertyMenu(
             GUIContent label,
-            AbstractMemberBinding target,
             PropertyInfo[] bindableProperties,
             Action<string> propertyValueSetter,
             string curPropertyValue,
@@ -84,14 +87,14 @@ namespace UnityWeld_Editor
 
             if (GUILayout.Button(new GUIContent(curPropertyValue, label.tooltip), EditorStyles.popup))
             {
-                InspectorUtils.ShowMenu<PropertyInfo>(
-                    property => property.ReflectedType + "/" + property.Name + " : " + property.PropertyType.Name,
+                InspectorUtils.ShowMenu(
+                    property => string.Concat(property.ReflectedType, "/", property.Name, " : ", property.PropertyType.Name),
                     menuEnabled,
-                    property => property.ReflectedType.Name + "." + property.Name == curPropertyValue,
+                    property => MemberInfoToString(property) == curPropertyValue,
                     property => UpdateProperty(
                         propertyValueSetter,
                         curPropertyValue,
-                        property.ReflectedType.Name + "." + property.Name
+                        MemberInfoToString(property)
                     ),
                     bindableProperties
                         .OrderBy(property => property.ReflectedType.Name)
@@ -109,22 +112,23 @@ namespace UnityWeld_Editor
         /// </summary>
         public void ShowViewPropertyMenu(
             GUIContent label, 
-            AbstractMemberBinding targetScript, 
-            BindablePropertyInfo[] properties, 
+            PropertyInfo[] properties, 
             Action<string> propertyValueSetter,
             string curPropertyValue,
             out Type selectedPropertyType
         )
         {
             var propertyNames = properties
-                .Select(prop => prop.PropertyInfo.ReflectedType.Name + "." + prop.PropertyInfo.Name)
+                .Select(MemberInfoToString)
                 .ToArray();
             var selectedIndex = Array.IndexOf(propertyNames, curPropertyValue);
-            var content = properties.Select(prop => new GUIContent(
-                    prop.PropertyInfo.ReflectedType.Name + "/" +
-                    prop.PropertyInfo.Name + " : " +
-                    prop.PropertyInfo.PropertyType.Name
-                ))
+            var content = properties.Select(prop => new GUIContent(string.Concat(
+                    prop.ReflectedType.Name, 
+                    "/",
+                    prop.Name, 
+                    " : ",
+                    prop.PropertyType.Name
+                )))
                 .ToArray();
 
             var newSelectedIndex = EditorGUILayout.Popup(label, selectedIndex, content);
@@ -135,10 +139,10 @@ namespace UnityWeld_Editor
                 UpdateProperty(
                     propertyValueSetter,
                     curPropertyValue,
-                    newSelectedProperty.PropertyInfo.ReflectedType.Name + "." + newSelectedProperty.PropertyInfo.Name
+                    MemberInfoToString(newSelectedProperty)
                 );
 
-                selectedPropertyType = newSelectedProperty.PropertyInfo.PropertyType;
+                selectedPropertyType = newSelectedProperty.PropertyType;
             }
             else
             {
@@ -148,7 +152,7 @@ namespace UnityWeld_Editor
                     return;
                 }
 
-                selectedPropertyType = properties[selectedIndex].PropertyInfo.PropertyType;
+                selectedPropertyType = properties[selectedIndex].PropertyType;
             }
         }
 
@@ -156,14 +160,13 @@ namespace UnityWeld_Editor
         /// Show dropdown for selecting a UnityEvent to bind to.
         /// </summary>
         protected void ShowEventMenu(
-            AbstractMemberBinding targetScript, 
             BindableEvent[] events,
             Action<string> propertyValueSetter,
             string curPropertyValue
         )
         {
             var eventNames = events
-                .Select(evt => evt.ComponentType.Name + "." + evt.Name)
+                .Select(BindableEventToString)
                 .ToArray();
             var selectedIndex = Array.IndexOf(eventNames, curPropertyValue);
             var content = events
@@ -176,15 +179,54 @@ namespace UnityWeld_Editor
                 content
             );
 
-            if (newSelectedIndex != selectedIndex)
+            if (newSelectedIndex == selectedIndex)
             {
-                var selectedEvent = events[newSelectedIndex];
-                UpdateProperty(
-                    propertyValueSetter,
-                    curPropertyValue,
-                    selectedEvent.ComponentType.Name + "." + selectedEvent.Name
-                );
+                return;
             }
+
+            var selectedEvent = events[newSelectedIndex];
+            UpdateProperty(
+                propertyValueSetter,
+                curPropertyValue,
+                BindableEventToString(selectedEvent)
+            );
+        }
+
+        /// <summary>
+        /// Show a field for selecting an AdapterOptions object matching the specified type of adapter.
+        /// </summary>
+        protected void ShowAdapterOptionsMenu(
+            string label, 
+            string adapterTypeName, 
+            Action<AdapterOptions> propertyValueSetter, 
+            AdapterOptions currentPropertyValue
+        )
+        {
+            // Don't show selector until an adapter has been selected.
+            if (string.IsNullOrEmpty(adapterTypeName))
+            {
+                return;
+            }
+
+            var adapterOptionsType = TypeResolver.FindAdapterAttribute(
+                TypeResolver.FindAdapterType(adapterTypeName)
+            ).OptionsType;
+
+            // Don't show selector unless the current adapter has its own overridden
+            // adapter options type.
+            if (adapterOptionsType == typeof(AdapterOptions))
+            {
+                return;
+            }
+
+            var newAdapterOptions = (AdapterOptions)EditorGUILayout.ObjectField(
+                label, 
+                currentPropertyValue, 
+                adapterOptionsType, 
+                false
+            );
+
+            UpdateProperty(propertyValueSetter, currentPropertyValue, newAdapterOptions);
         }
 
         /// <summary>
@@ -210,12 +252,8 @@ namespace UnityWeld_Editor
         protected Type AdaptTypeBackward(Type inputType, string adapterName)
         {
             var adapterAttribute = FindAdapterAttribute(adapterName);
-            if (adapterAttribute != null)
-            {
-                return adapterAttribute.InputType;
-            }
 
-            return inputType;
+            return adapterAttribute != null ? adapterAttribute.InputType : inputType;
         }
 
         /// <summary>
@@ -224,12 +262,36 @@ namespace UnityWeld_Editor
         protected Type AdaptTypeForward(Type inputType, string adapterName)
         {
             var adapterAttribute = FindAdapterAttribute(adapterName);
-            if (adapterAttribute != null)
-            {
-                return adapterAttribute.OutputType;
-            }
 
-            return inputType;
+            return adapterAttribute != null ? adapterAttribute.OutputType : inputType;
+        }
+
+        /// <summary>
+        /// Convert a MemberInfo to a uniquely identifiable string.
+        /// </summary>
+        protected static string MemberInfoToString(MemberInfo member)
+        {
+            return string.Concat(member.ReflectedType.ToString(), ".", member.Name);
+        }
+
+        /// <summary>
+        /// Convert a BindableEvent to a uniquely identifiable string.
+        /// </summary>
+        private static string BindableEventToString(BindableEvent evt)
+        {
+            return string.Concat(evt.ComponentType.ToString(), ".", evt.Name);
+        }
+
+        /// <summary>
+        /// Returns an array of all the names of adapter types that match the 
+        /// provided prediate function.
+        /// </summary>
+        protected static string[] GetAdapterTypeNames(Func<Type, bool> adapterSelectionPredicate)
+        {
+            return TypeResolver.TypesWithAdapterAttribute
+                .Where(adapterSelectionPredicate)
+                .Select(type => type.ToString())
+                .ToArray();
         }
     }
 }

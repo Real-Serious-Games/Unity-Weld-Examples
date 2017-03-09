@@ -1,36 +1,19 @@
-﻿using UnityEngine;
+﻿using Assets._5_Validation;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityWeld.Binding;
 
-[Adapter(typeof(bool), typeof(ColorBlock))]
-public class ColorValidationAdapter : IAdapter
+namespace ValidationExample
 {
-    public object Convert(object valueIn)
+    [Adapter(typeof(bool), typeof(ColorBlock), typeof(ColorValidationAdapterOptions))]
+    public class ColorValidationAdapter : IAdapter
     {
-        var isValid = (bool)valueIn;
-        if (isValid)
+        public object Convert(object valueIn, AdapterOptions adapterOptions)
         {
-            return new ColorBlock()
-            {
-                normalColor = Color.white,
-                highlightedColor = Color.white,
-                pressedColor = Color.white,
-                disabledColor = Color.white,
-                colorMultiplier = 1,
-                fadeDuration = 0.1f,
-            };
-        }
-        else
-        {
-            return new ColorBlock()
-            {
-                normalColor = Color.red,
-                highlightedColor = Color.red,
-                pressedColor = Color.red,
-                disabledColor = Color.white,
-                colorMultiplier = 1,
-                fadeDuration = 0.1f,
-            };
+            var isValid = (bool)valueIn;
+            var options = (ColorValidationAdapterOptions) adapterOptions;
+
+            return isValid ? options.NormalColor : options.InvalidColor;
         }
     }
 }

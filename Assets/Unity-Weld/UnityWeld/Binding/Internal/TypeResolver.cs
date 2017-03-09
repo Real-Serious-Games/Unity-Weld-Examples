@@ -15,7 +15,7 @@ namespace UnityWeld.Internal
     {
         private static Type[] typesWithBindingAttribute;
 
-        public static Type[] TypesWithBindingAttribute
+        public static IEnumerable<Type> TypesWithBindingAttribute
         {
             get
             {
@@ -30,7 +30,7 @@ namespace UnityWeld.Internal
 
         private static Type[] typesWithAdapterAttribute;
 
-        public static Type[] TypesWithAdapterAttribute
+        public static IEnumerable<Type> TypesWithAdapterAttribute
         {
             get
             {
@@ -44,7 +44,7 @@ namespace UnityWeld.Internal
         }
 
         /// <summary>
-        /// Find all types marked with the [Binding] attribute.
+        /// Find all types marked with the specified attribute.
         /// </summary>
         private static Type[] FindTypesMarkedByAttribute(Type attributeType)
         {
@@ -106,7 +106,7 @@ namespace UnityWeld.Internal
         /// </summary>
         public static Type FindAdapterType(string typeName)
         {
-            var matchingTypes = TypesWithAdapterAttribute.Where(type => type.Name == typeName);
+            var matchingTypes = TypesWithAdapterAttribute.Where(type => type.ToString() == typeName);
             if (!matchingTypes.Any())
             {
                 return null;
@@ -117,7 +117,7 @@ namespace UnityWeld.Internal
                 throw new ApplicationException("Multiple types match: " + typeName);
             }
 
-            return matchingTypes.First();               
+            return matchingTypes.First();
         }
 
         /// <summary>
@@ -138,8 +138,7 @@ namespace UnityWeld.Internal
         private static Type GetViewModelType(string viewModelTypeName)
         {
             var type = TypesWithBindingAttribute
-                .Where(t => t.Name == viewModelTypeName)
-                .FirstOrDefault();
+                .FirstOrDefault(t => t.ToString() == viewModelTypeName);
 
             if (type == null)
             {

@@ -15,32 +15,38 @@ namespace UnityWeld.Binding
         /// <summary>
         /// The object that owns the property.
         /// </summary>
-        private object propertyOwner;
+        private readonly object propertyOwner;
 
         /// <summary>
         /// The name of the property.
         /// </summary>
-        private string propertyName;
+        private readonly string propertyName;
 
         /// <summary>
         /// Cached reference to the property.
         /// </summary>
-        private PropertyInfo property;
+        private readonly PropertyInfo property;
 
         /// <summary>
         /// Adapter for converting values that are set on the property.
         /// </summary>
-        private IAdapter adaptor;
+        private readonly IAdapter adapter;
 
-        public PropertyEndPoint(object propertyOwner, string propertyName, IAdapter adaptor, string endPointType, Component context)
+        /// <summary>
+        /// Options for using the adapter to convert values.
+        /// </summary>
+        private readonly AdapterOptions adapterOptions;
+
+        public PropertyEndPoint(object propertyOwner, string propertyName, IAdapter adapter, AdapterOptions options, string endPointType, Component context)
         {
             this.propertyOwner = propertyOwner;
-            this.adaptor = adaptor;
+            this.adapter = adapter;
+            this.adapterOptions = options;
             var type = propertyOwner.GetType();
 
             if (string.IsNullOrEmpty(propertyName))
             {
-                Debug.LogError("Property not specified for type '" + type.Name + "'.", context);
+                Debug.LogError("Property not specified for type '" + type + "'.", context);
                 return;
             }
 
@@ -48,7 +54,7 @@ namespace UnityWeld.Binding
             this.property = type.GetProperty(propertyName);
             if (this.property == null)
             {
-                Debug.LogError("Property '" + propertyName + "' not found on " + endPointType  + " '" + type.Name + "'.", context);
+                Debug.LogError("Property '" + propertyName + "' not found on " + endPointType  + " '" + type + "'.", context);
             }
         }
 
@@ -70,9 +76,9 @@ namespace UnityWeld.Binding
                 return;
             }
 
-            if (adaptor != null)
+            if (adapter != null)
             {
-                input = adaptor.Convert(input);
+                input = adapter.Convert(input, adapterOptions);
             }
 
             property.SetValue(propertyOwner, input, null);
@@ -80,12 +86,12 @@ namespace UnityWeld.Binding
 
         public override string ToString()
         {
-            if (property != null)
+            if (property == null)
             {
                 return "!! property not found !!";
             }
 
-            return propertyOwner.GetType().Name + "." + property.Name + " (" + property.PropertyType.Name + ")";
+            return string.Concat(propertyOwner.GetType(), ".", property.Name, " (", property.PropertyType.Name, ")");
         }
 
         /// <summary>

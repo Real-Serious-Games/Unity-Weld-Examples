@@ -1,68 +1,71 @@
 ﻿using UnityWeld.Binding;
 
-[Binding]
-public class AddressTab: Tab {
-
+namespace TemplateExample
+{
     [Binding]
-    public string Number
-    {
-        get
+    public class AddressTab: Tab {
+
+        [Binding]
+        public string Number
         {
-            return number;
-        }
-        set
-        {
-            if (number == value)
+            get
             {
-                return;
+                return number;
             }
-
-            number = value;
-
-            OnPropertyChanged("Number");
-        }
-    }
-    private string number = string.Empty;
-
-    [Binding]
-    public string Street
-    {
-        get
-        {
-            return street;
-        }
-        set
-        {
-            if (street == value)
+            set
             {
-                return;
+                if (number == value)
+                {
+                    return;
+                }
+
+                number = value;
+
+                OnPropertyChanged("Number");
             }
-
-            street = value;
-
-            OnPropertyChanged("Street");
         }
-    }
-    private string street = string.Empty;
+        private string number = string.Empty;
 
-    [Binding]
-    public string Suburb
-    {
-        get
+        [Binding]
+        public string Street
         {
-            return suburb;
-        }
-        set
-        {
-            if (suburb == value)
+            get
             {
-                return;
+                return street;
             }
+            set
+            {
+                if (street == value)
+                {
+                    return;
+                }
 
-            suburb = value;
+                street = value;
 
-            OnPropertyChanged("Suburb");
+                OnPropertyChanged("Street");
+            }
         }
+        private string street = string.Empty;
+
+        [Binding]
+        public string Suburb
+        {
+            get
+            {
+                return suburb;
+            }
+            set
+            {
+                if (suburb == value)
+                {
+                    return;
+                }
+
+                suburb = value;
+
+                OnPropertyChanged("Suburb");
+            }
+        }
+        private string suburb = string.Empty;
     }
-    private string suburb = string.Empty;
 }

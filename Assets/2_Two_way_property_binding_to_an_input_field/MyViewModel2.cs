@@ -2,51 +2,54 @@
 using System.ComponentModel;
 using UnityWeld.Binding;
 
-[Binding]
-public class MyViewModel2 : MonoBehaviour, INotifyPropertyChanged
+namespace TwoWayExample
 {
-    private string text = "<Type some text>";
-
     [Binding]
-    public string Text
+    public class MyViewModel2 : MonoBehaviour, INotifyPropertyChanged
     {
-        get
+        private string text = "<Type some text>";
+
+        [Binding]
+        public string Text
         {
-            return text;
-        }
-        set
-        {
-            if (text == value)
+            get
             {
-                return; // No change.
+                return text;
             }
+            set
+            {
+                if (text == value)
+                {
+                    return; // No change.
+                }
 
-            text = value;
+                text = value;
 
-            OnPropertyChanged("Text");
+                OnPropertyChanged("Text");
+            }
         }
-    }
 
-    /// <summary>
-    /// Event to raise when a property's value has changed.
-    /// </summary>
-    public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// Event to raise when a property's value has changed.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
-    // Use this for initialization
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
-    private void OnPropertyChanged(string propertyName)
-    {
-        if (PropertyChanged != null)
+        // Use this for initialization
+        void Start()
         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+        }
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 }

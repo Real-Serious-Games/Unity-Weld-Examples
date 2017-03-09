@@ -21,20 +21,19 @@ namespace UnityWeld_Editor
             Type viewPropertyType = null;
             ShowViewPropertyMenu(
                 new GUIContent("View property", "Property on the view to bind to"),
-                targetScript,
                 PropertyFinder.GetBindableProperties(targetScript.gameObject)
-                    .OrderBy(property => property.PropertyInfo.ReflectedType.Name)
-                    .ThenBy(property => property.PropertyInfo.Name)
+                    .OrderBy(property => property.ReflectedType.Name)
+                    .ThenBy(property => property.Name)
                     .ToArray(),
                 updatedValue => targetScript.uiPropertyName = updatedValue,
                 targetScript.uiPropertyName,
                 out viewPropertyType
             );
 
-            var viewAdapterTypeNames = TypeResolver.TypesWithAdapterAttribute
-                .Where(type => viewPropertyType == null || TypeResolver.FindAdapterAttribute(type).OutputType == viewPropertyType)
-                .Select(type => type.Name)
-                .ToArray();
+            var viewAdapterTypeNames = GetAdapterTypeNames(
+                type => viewPropertyType == null || 
+                    TypeResolver.FindAdapterAttribute(type).OutputType == viewPropertyType
+            );
 
             ShowAdapterMenu(
                 new GUIContent("View adapter", "Adapter that converts values sent from the view-model to the view."),
@@ -42,6 +41,12 @@ namespace UnityWeld_Editor
                 targetScript.viewAdapterTypeName,
                 newValue =>
                 {
+                    // Get rid of old adapter options if we changed the type of the adapter.
+                    if (newValue != targetScript.viewAdapterTypeName)
+                    {
+                        targetScript.viewAdapterOptions = null;
+                    }
+
                     UpdateProperty(
                         updatedValue => targetScript.viewAdapterTypeName = updatedValue,
                         targetScript.viewAdapterTypeName,
@@ -50,10 +55,16 @@ namespace UnityWeld_Editor
                 }
             );
 
+            ShowAdapterOptionsMenu(
+                "View adapter options", 
+                targetScript.viewAdapterTypeName, 
+                options => targetScript.viewAdapterOptions = options,
+                targetScript.viewAdapterOptions
+            );
+
             var adaptedViewPropertyType = AdaptTypeBackward(viewPropertyType, targetScript.viewAdapterTypeName);
             ShowViewModelPropertyMenu(
                 new GUIContent("View-model property", "Property on the view-model to bind to."),
-                targetScript,
                 TypeResolver.FindBindableProperties(targetScript),
                 updatedValue => targetScript.viewModelPropertyName = updatedValue,
                 targetScript.viewModelPropertyName,

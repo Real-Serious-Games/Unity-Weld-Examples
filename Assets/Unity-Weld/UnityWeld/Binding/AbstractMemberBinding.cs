@@ -31,18 +31,16 @@ namespace UnityWeld.Binding
             {
                 var components = trans.GetComponents<MonoBehaviour>();
                 var monoBehaviourViewModel = components
-                    .Where(component => component.GetType().Name == viewModelName)
-                    .FirstOrDefault();
+                    .FirstOrDefault(component => component.GetType().ToString() == viewModelName);
                 if (monoBehaviourViewModel != null)
                 {
                     return monoBehaviourViewModel;
                 }
 
-                var providedViewModel = components                    
+                var providedViewModel = components
                     .Select(component => component as IViewModelProvider)
                     .Where(component => component != null)
-                    .Where(viewModelBinding => viewModelBinding.GetViewModelTypeName() == viewModelName && (object)viewModelBinding != this)
-                    .FirstOrDefault();
+                    .FirstOrDefault(viewModelBinding => viewModelBinding.GetViewModelTypeName() == viewModelName && (object)viewModelBinding != this);
                 if (providedViewModel != null)
                 {
                     return providedViewModel.GetViewModel();
@@ -84,7 +82,7 @@ namespace UnityWeld.Binding
         /// <summary>
         /// Make a property end point for a property on the view model.
         /// </summary>
-        protected PropertyEndPoint MakeViewModelEndPoint(string viewModelPropertyName, string adapterTypeName)
+        protected PropertyEndPoint MakeViewModelEndPoint(string viewModelPropertyName, string adapterTypeName, AdapterOptions adapterOptions)
         {
             string propertyName;
             object viewModel;
@@ -92,7 +90,7 @@ namespace UnityWeld.Binding
 
             var adapter = CreateAdapter(adapterTypeName);
 
-            return new PropertyEndPoint(viewModel, propertyName, adapter, "view-model", this);
+            return new PropertyEndPoint(viewModel, propertyName, adapter, adapterOptions, "view-model", this);
         }
 
         /// <summary>

@@ -20,7 +20,6 @@ namespace UnityWeld_Editor
             var targetScript = (EventBinding)target;
 
             ShowEventMenu(
-                targetScript,
                 UnityEventWatcher.GetBindableEvents(targetScript.gameObject)
                     .OrderBy(evt => evt.Name)
                     .ToArray(),
@@ -46,14 +45,14 @@ namespace UnityWeld_Editor
 
             if (GUILayout.Button(new GUIContent(targetScript.viewModelMethodName, tooltip), EditorStyles.popup))
             {
-                InspectorUtils.ShowMenu<MethodInfo>(
+                InspectorUtils.ShowMenu(
                     method => method.ReflectedType + "/" + method.Name,
                     method => true,
-                    method => method.ReflectedType.Name + "." + method.Name == targetScript.viewModelMethodName,
+                    method => MemberInfoToString(method) == targetScript.viewModelMethodName,
                     method => UpdateProperty(
                         updatedValue => targetScript.viewModelMethodName = updatedValue,
                         targetScript.viewModelMethodName,
-                        method.ReflectedType.Name + "." + method.Name
+                        MemberInfoToString(method)
                     ),
                     bindableMethods
                         .OrderBy(method => method.ReflectedType.Name)

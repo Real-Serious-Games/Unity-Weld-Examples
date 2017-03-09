@@ -11,7 +11,7 @@ namespace UnityWeld.Binding.Adapters
     [Adapter(typeof(string), typeof(float))]
     public class StringToFloatAdapter : IAdapter
     {
-        public object Convert(object valueIn)
+        public object Convert(object valueIn, AdapterOptions options)
         {
             return float.Parse((string)valueIn);
         }

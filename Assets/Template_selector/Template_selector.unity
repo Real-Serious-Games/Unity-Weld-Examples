@@ -334,10 +334,10 @@ RectTransform:
   m_Father: {fileID: 722621094}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 15, y: -62.5}
+  m_SizeDelta: {x: 0, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &84525601
 MonoBehaviour:
@@ -624,8 +624,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 203086307}
-  - component: {fileID: 203086308}
   - component: {fileID: 203086309}
+  - component: {fileID: 203086308}
   m_Layer: 5
   m_Name: NameTemplate
   m_TagString: Untagged
@@ -661,7 +661,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 203086306}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddad2d4c908040c49924228ac5498061, type: 3}
+  m_Script: {fileID: 11500000, guid: 14fbe316db38e1b48a273eac0c26fe31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelTypeName: NameTab
@@ -966,9 +966,12 @@ MonoBehaviour:
   uiEventName: InputField.onValueChanged
   uiPropertyName: InputField.text
   viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!114 &348337994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1060,9 +1063,12 @@ MonoBehaviour:
   uiEventName: UnityEngine.UI.InputField.onValueChanged
   uiPropertyName: UnityEngine.UI.InputField.text
   viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!114 &367991173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1315,10 +1321,10 @@ RectTransform:
   m_Father: {fileID: 722621094}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 15, y: -97.5}
+  m_SizeDelta: {x: 0, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &543988509
 MonoBehaviour:
@@ -1460,6 +1466,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
   viewModelPropertyName: AddressTab.Street
   uiPropertyName: Text.text
 --- !u!114 &683462170
@@ -1585,15 +1592,15 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 722621094}
-  - component: {fileID: 722621096}
   - component: {fileID: 722621095}
+  - component: {fileID: 722621096}
   m_Layer: 5
   m_Name: AddressTemplate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &722621094
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1645,7 +1652,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 722621093}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddad2d4c908040c49924228ac5498061, type: 3}
+  m_Script: {fileID: 11500000, guid: 14fbe316db38e1b48a273eac0c26fe31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelTypeName: TemplateExample.AddressTab
@@ -1778,9 +1785,12 @@ MonoBehaviour:
   uiEventName: InputField.onValueChanged
   uiPropertyName: InputField.text
   viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!114 &762205061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1926,10 +1936,10 @@ RectTransform:
   m_Father: {fileID: 722621094}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 15, y: -27.5}
+  m_SizeDelta: {x: 0, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &770025887
 MonoBehaviour:
@@ -2073,6 +2083,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
   viewModelPropertyName: AddressTab.Number
   uiPropertyName: Text.text
 --- !u!114 &810043759
@@ -2162,6 +2173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
   viewModelPropertyName: NameTab.LastName
   uiPropertyName: Text.text
 --- !u!114 &916156969
@@ -2424,9 +2436,12 @@ MonoBehaviour:
   uiEventName: UnityEngine.UI.InputField.onValueChanged
   uiPropertyName: UnityEngine.UI.InputField.text
   viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!114 &1116703498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2663,11 +2678,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1391529096}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a62a47d2bd28be4289c8816d882eb0e, type: 3}
+  m_Script: {fileID: 11500000, guid: ddad2d4c908040c49924228ac5498061, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelPropertyName: MyUI5.ActiveTab
-  templates: {fileID: 1459031331}
+  templatesRoot: {fileID: 1459031331}
 --- !u!1 &1445241314
 GameObject:
   m_ObjectHideFlags: 0
@@ -2998,9 +3013,12 @@ MonoBehaviour:
   uiEventName: UnityEngine.UI.InputField.onValueChanged
   uiPropertyName: UnityEngine.UI.InputField.text
   viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!114 &1530413839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3219,6 +3237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
   viewModelPropertyName: NameTab.FirstName
   uiPropertyName: Text.text
 --- !u!114 &1649250967
@@ -3720,6 +3739,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
   viewModelPropertyName: AddressTab.Suburb
   uiPropertyName: Text.text
 --- !u!114 &1880919327

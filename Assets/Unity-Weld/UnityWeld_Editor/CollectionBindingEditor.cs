@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityWeld;
 using UnityWeld.Binding;
-using UnityWeld.Internal;
-using UnityWeld_Editor;
+using UnityWeld.Binding.Internal;
 
 namespace UnityWeld_Editor
 {
@@ -30,12 +22,12 @@ namespace UnityWeld_Editor
             );
 
             UpdateProperty(
-                updatedValue => targetScript.template = updatedValue,
-                targetScript.template,
-                (TemplateBinding)EditorGUILayout.ObjectField(
-                    new GUIContent("Collection template", "Object to create instances of for each item in the collection."), 
-                    targetScript.template, 
-                    typeof(TemplateBinding), 
+                updatedValue => targetScript.templatesRoot = updatedValue,
+                targetScript.templatesRoot,
+                (GameObject)EditorGUILayout.ObjectField(
+                    new GUIContent("Collection templates", "Object to create instances of for each item in the collection."), 
+                    targetScript.templatesRoot, 
+                    typeof(GameObject), 
                     true
                 )
             );

@@ -1,38 +1,37 @@
-﻿using System;
-using System.Linq;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityWeld.Binding;
-using UnityWeld.Internal;
-using UnityWeld_Editor;
+using UnityWeld.Binding.Internal;
 
-/// <summary>
-/// Editor for template bindings with a dropdown for selecting what view model
-/// to bind to.
-/// </summary>
-[CustomEditor(typeof(TemplateBinding))]
-public class TemplateBindingEditor : BaseBindingEditor
+namespace UnityWeld_Editor
 {
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(TemplateBinding))]
+    class TemplateBindingEditor : BaseBindingEditor
     {
-        var targetScript = (TemplateBinding)target;
 
-        var availableViewModels = TypeResolver.TypesWithBindingAttribute
-            .Select(type => type.ToString())
-            .OrderBy(name => name)
-            .ToArray();
+        public override void OnInspectorGUI()
+        {
+            // Initialise everything
+            var targetScript = (TemplateBinding)target;
 
-        var selectedIndex = Array.IndexOf(availableViewModels, targetScript.viewModelTypeName);
+            ShowViewModelPropertyMenu(
+                new GUIContent("Template property", "Property on the view model to use for selecting templates."),
+                TypeResolver.FindBindableProperties(targetScript),
+                updatedValue => targetScript.viewModelPropertyName = updatedValue,
+                targetScript.viewModelPropertyName,
+                property => true
+            );
 
-        var newSelectedIndex = EditorGUILayout.Popup(
-            new GUIContent("Template view model", "Type of the view model that this template will be bound to when it is instantiated."),
-            selectedIndex,
-            availableViewModels.Select(viewModel => new GUIContent(viewModel)).ToArray()
-        );
-
-        UpdateProperty(newValue => targetScript.viewModelTypeName = newValue,
-            selectedIndex < 0 ? string.Empty : availableViewModels[selectedIndex],
-            newSelectedIndex < 0 ? string.Empty : availableViewModels[newSelectedIndex]
-        );
+            UpdateProperty(
+                updatedValue => targetScript.templatesRoot = updatedValue,
+                targetScript.templatesRoot,
+                (GameObject)EditorGUILayout.ObjectField(
+                    new GUIContent("Templates root object", "Parent object to the objects we want to use as templates."),
+                    targetScript.templatesRoot, 
+                    typeof(GameObject), 
+                    true
+                )
+            );
+        }
     }
 }

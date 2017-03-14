@@ -1,61 +1,73 @@
-﻿using UnityEngine;
-using UnityEngine.Assertions;
+﻿using System;
+using System.Reflection;
+using UnityWeld.Binding.Internal;
 
 namespace UnityWeld.Binding
 {
     /// <summary>
-    /// Template for use in collection bindings.
+    /// Binds to a view and instantiates a template based on the view type.
     /// </summary>
-    public interface ITemplateBinding
+    public class TemplateBinding : AbstractTemplateSelector
     {
         /// <summary>
-        /// Set the view model and initialise all binding objects down the hierarchy.
+        /// The property of the view model that is being bound to
         /// </summary>
-        void InitChildBindings(object viewModel);
-    }
-
-    /// <summary>
-    /// Template for use in collection bindings.
-    /// </summary>
-    public class TemplateBinding : MonoBehaviour, IViewModelProvider, ITemplateBinding
-    {
+        private PropertyInfo viewModelProperty;
+        
         /// <summary>
-        /// Get the view-model provided by this provider.
+        /// Connect to the attached view model.
         /// </summary>
-        public object GetViewModel()
+        public override void Connect()
         {
-            return viewModel;
-        }
+            Disconnect();
 
-        /// <summary>
-        /// Get the name of the view-model's type.
-        /// </summary>
-        public string GetViewModelTypeName()
-        {
-            return viewModelTypeName;
-        }
+            string propertyName;
+            ParseViewModelEndPointReference(viewModelPropertyName, out propertyName, out viewModel);
 
-        public string viewModelTypeName = string.Empty;
+            viewModelPropertyWatcher = new PropertyWatcher(viewModel, propertyName, InitalizeTemplate);
 
-        /// <summary>
-        /// Cached view-model object.
-        /// </summary>
-        private object viewModel;
-
-        /// <summary>
-        /// Set the view model and initialise all binding objects down the hierarchy.
-        /// </summary>
-        public void InitChildBindings(object viewModel)
-        {
-            Assert.IsNotNull(viewModel, "Cannot initialise child bindings with null view model.");
-
-            // Set the bound view to the new view model.
-            this.viewModel = viewModel;
-
-            foreach (var binding in GetComponentsInChildren<AbstractMemberBinding>())
+            // Get property from view model.
+            viewModelProperty = viewModel.GetType().GetProperty(propertyName);
+            if (viewModelProperty == null)
             {
-                binding.Init();
+                throw new ApplicationException("Expected property " + viewModelPropertyName + ", but was not found.");
             }
+
+            InitalizeTemplate();
+        }
+
+
+        /// <summary>
+        /// Disconnect from the attached view model.
+        /// </summary>
+        public override void Disconnect()
+        {
+            DestroyAllTemplates();
+
+            if (viewModelPropertyWatcher != null)
+            {
+                viewModelPropertyWatcher.Dispose();
+                viewModelPropertyWatcher = null;
+            }
+
+            viewModel = null;
+        }
+
+        /// <summary>
+        /// Initalized the correct tempalte based on the type.
+        /// </summary>
+        private void InitalizeTemplate()
+        {
+            DestroyAllTemplates();
+
+            // Get value from view model.
+            var viewModelPropertyValue = viewModelProperty.GetValue(viewModel, null);
+            if (viewModelPropertyValue == null)
+            {
+                throw new ApplicationException("Cannot bind to null property in view: " + viewModelPropertyName);
+            }
+
+            InstantiateTemplate(viewModelPropertyValue);
         }
     }
-} 
+}

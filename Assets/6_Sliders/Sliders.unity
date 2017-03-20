@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -358,12 +358,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelPropertyName: MyViewModel6.SliderValue
-  uiEventName: Slider.onValueChanged
-  uiPropertyName: Slider.value
+  uiEventName: UnityEngine.UI.Slider.onValueChanged
+  uiPropertyName: UnityEngine.UI.Slider.value
   viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!114 &454581836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,9 +462,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26fff9f3256f02d43b6065b078449891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewAdapterTypeName: FloatToStringAdapter
+  viewAdapterTypeName: UnityWeld.Binding.Adapters.FloatToStringAdapter
+  viewAdapterOptions: {fileID: 11400000, guid: 2c0b8e4ef384ef74b846f3dc74202e1e, type: 2}
   viewModelPropertyName: MyViewModel6.SliderValue
-  uiPropertyName: Text.text
+  uiPropertyName: UnityEngine.UI.Text.text
 --- !u!114 &564910992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1063,9 +1067,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26fff9f3256f02d43b6065b078449891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewAdapterTypeName: ColorValidationAdapter
+  viewAdapterTypeName: ValidationExample.ColorValidationAdapter
+  viewAdapterOptions: {fileID: 11400000, guid: 9dff743a1413daf4b93861eba4924f0e, type: 2}
   viewModelPropertyName: MyViewModel6.IsValid
-  uiPropertyName: InputField.colors
+  uiPropertyName: UnityEngine.UI.InputField.colors
 --- !u!114 &1425463860
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1174,12 +1179,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelPropertyName: MyViewModel6.SliderValue
-  uiEventName: InputField.onValueChanged
-  uiPropertyName: InputField.text
-  viewAdapterTypeName: FloatToStringAdapter
-  viewModelAdapterTypeName: StringToFloatAdapter
+  uiEventName: UnityEngine.UI.InputField.onValueChanged
+  uiPropertyName: UnityEngine.UI.InputField.text
+  viewAdapterTypeName: UnityWeld.Binding.Adapters.FloatToStringAdapter
+  viewAdapterOptions: {fileID: 11400000, guid: 2c0b8e4ef384ef74b846f3dc74202e1e, type: 2}
+  viewModelAdapterTypeName: UnityWeld.Binding.Adapters.StringToFloatAdapter
+  viewModelAdapterOptions: {fileID: 0}
   exceptionPropertyName: MyViewModel6.IsValid
   exceptionAdapterTypeName: ExceptionValidationAdapter
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!1 &1553998129
 GameObject:
   m_ObjectHideFlags: 0
@@ -1230,12 +1238,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewModelPropertyName: MyViewModel6.SliderValue
-  uiEventName: Slider.onValueChanged
-  uiPropertyName: Slider.value
+  uiEventName: UnityEngine.UI.Slider.onValueChanged
+  uiPropertyName: UnityEngine.UI.Slider.value
   viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
   viewModelAdapterTypeName: 
+  viewModelAdapterOptions: {fileID: 0}
   exceptionPropertyName: 
   exceptionAdapterTypeName: 
+  exceptionAdapterOptions: {fileID: 0}
 --- !u!114 &1553998132
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465785, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1060,8 +1060,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewAdapterTypeName: 
+  viewAdapterOptions: {fileID: 0}
   viewModelPropertyName: MyViewModel7.SelectedItem
-  uiPropertyName: Text.text
+  uiPropertyName: UnityEngine.UI.Text.text
 --- !u!114 &1619311953
 MonoBehaviour:
   m_ObjectHideFlags: 0

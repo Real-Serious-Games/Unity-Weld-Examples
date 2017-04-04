@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityWeld.Binding;
 using UnityWeld.Binding.Internal;
@@ -10,10 +11,41 @@ namespace UnityWeld_Editor
     [CustomEditor(typeof(TwoWayPropertyBinding))]
     class PropertyBindingEditor : BaseBindingEditor
     {
+        private TwoWayPropertyBinding targetScript;
+
+        private AnimBool viewAdapterOptionsFade;
+        private AnimBool viewModelAdapterOptionsFade;
+        private AnimBool exceptionAdapterOptionsFade;
+
+        private void OnEnable()
+        {
+            targetScript = (TwoWayPropertyBinding)target;
+
+            Type adapterType;
+            viewAdapterOptionsFade = new AnimBool(
+                ShouldShowAdapterOptions(targetScript.viewAdapterTypeName, out adapterType)
+            );
+            viewModelAdapterOptionsFade = new AnimBool(
+                ShouldShowAdapterOptions(targetScript.viewModelAdapterTypeName, out adapterType)
+            );
+            exceptionAdapterOptionsFade = new AnimBool(
+                ShouldShowAdapterOptions(targetScript.exceptionAdapterTypeName, out adapterType)
+            );
+
+            viewAdapterOptionsFade.valueChanged.AddListener(Repaint);
+            viewModelAdapterOptionsFade.valueChanged.AddListener(Repaint);
+            exceptionAdapterOptionsFade.valueChanged.AddListener(Repaint);
+        }
+
+        private void OnDisable()
+        {
+            viewAdapterOptionsFade.valueChanged.RemoveListener(Repaint);
+            viewModelAdapterOptionsFade.valueChanged.RemoveListener(Repaint);
+            exceptionAdapterOptionsFade.valueChanged.RemoveListener(Repaint);
+        }
+
         public override void OnInspectorGUI()
         {
-            var targetScript = (TwoWayPropertyBinding)target;
-
             ShowEventMenu(
                 UnityEventWatcher.GetBindableEvents(targetScript.gameObject)
                     .OrderBy(evt => evt.Name)
@@ -34,6 +66,13 @@ namespace UnityWeld_Editor
                 out viewPropertyType
             );
 
+            // Don't let the user set other options until they've set the event and view property.
+            var guiPreviouslyEnabled = GUI.enabled;
+            if (string.IsNullOrEmpty(targetScript.uiEventName) || string.IsNullOrEmpty(targetScript.uiPropertyName))
+            {
+                GUI.enabled = false;
+            }
+
             var viewAdapterTypeNames = GetAdapterTypeNames(
                 type => viewPropertyType == null || 
                     TypeResolver.FindAdapterAttribute(type).OutputType == viewPropertyType
@@ -48,23 +87,30 @@ namespace UnityWeld_Editor
                     // Get rid of old adapter options if we changed the type of the adapter.
                     if (newValue != targetScript.viewAdapterTypeName)
                     {
+                        Undo.RecordObject(targetScript, "Set view adapter options");
                         targetScript.viewAdapterOptions = null;
                     }
 
                     UpdateProperty(
                         updatedValue => targetScript.viewAdapterTypeName = updatedValue,
                         targetScript.viewAdapterTypeName,
-                        newValue
+                        newValue,
+                        "Set view adapter"
                     );
                 }
             );
 
+            Type viewAdapterType;
+            viewAdapterOptionsFade.target = ShouldShowAdapterOptions(targetScript.viewAdapterTypeName, out viewAdapterType);
             ShowAdapterOptionsMenu(
                 "View adapter options",
-                targetScript.viewAdapterTypeName,
+                viewAdapterType,
                 options => targetScript.viewAdapterOptions = options,
-                targetScript.viewAdapterOptions
+                targetScript.viewAdapterOptions,
+                viewAdapterOptionsFade.faded
             );
+
+            EditorGUILayout.Space();
 
             var adaptedViewPropertyType = AdaptTypeBackward(viewPropertyType, targetScript.viewAdapterTypeName);
             ShowViewModelPropertyMenu(
@@ -88,52 +134,33 @@ namespace UnityWeld_Editor
                 {
                     if (newValue != targetScript.viewModelAdapterTypeName)
                     {
+                        Undo.RecordObject(targetScript, "Set view-model adapter options");
                         targetScript.viewModelAdapterOptions = null;
                     }
 
                     UpdateProperty(
                         updatedValue => targetScript.viewModelAdapterTypeName = updatedValue,
                         targetScript.viewModelAdapterTypeName,
-                        newValue
+                        newValue,
+                        "Set view-model adapter"
                     );
                 }
             );
 
+            Type viewModelAdapterType;
+            viewModelAdapterOptionsFade.target = ShouldShowAdapterOptions(targetScript.viewModelAdapterTypeName, out viewModelAdapterType);
             ShowAdapterOptionsMenu(
                 "View-model adapter options",
-                targetScript.viewModelAdapterTypeName,
+                viewModelAdapterType,
                 options => targetScript.viewModelAdapterOptions = options,
-                targetScript.viewModelAdapterOptions
+                targetScript.viewModelAdapterOptions,
+                viewModelAdapterOptionsFade.faded
             );
+
+            EditorGUILayout.Space();
 
             var expectionAdapterTypeNames = GetAdapterTypeNames(
                 type => TypeResolver.FindAdapterAttribute(type).InputType == typeof(Exception)
-            );
-
-            ShowAdapterMenu(
-                new GUIContent("Exception adapter", "Adapter that handles exceptions thrown by the view-model adapter"),
-                expectionAdapterTypeNames,
-                targetScript.exceptionAdapterTypeName,
-                newValue =>
-                {
-                    if (newValue != targetScript.exceptionAdapterTypeName)
-                    {
-                        targetScript.exceptionAdapterOptions = null;
-                    }
-
-                    UpdateProperty(
-                        updatedValue => targetScript.exceptionAdapterTypeName = updatedValue,
-                        targetScript.exceptionAdapterTypeName,
-                        newValue
-                    );
-                }
-            );
-
-            ShowAdapterOptionsMenu(
-                "Exception adapter options",
-                targetScript.exceptionAdapterTypeName,
-                options => targetScript.exceptionAdapterOptions = options,
-                targetScript.exceptionAdapterOptions
             );
 
             var adaptedExceptionPropertyType = AdaptTypeForward(typeof(Exception), targetScript.exceptionAdapterTypeName);
@@ -144,6 +171,39 @@ namespace UnityWeld_Editor
                 targetScript.exceptionPropertyName,
                 property => property.PropertyType == adaptedExceptionPropertyType
             );
+
+            ShowAdapterMenu(
+                new GUIContent("Exception adapter", "Adapter that handles exceptions thrown by the view-model adapter"),
+                expectionAdapterTypeNames,
+                targetScript.exceptionAdapterTypeName,
+                newValue =>
+                {
+                    if (newValue != targetScript.exceptionAdapterTypeName)
+                    {
+                        Undo.RecordObject(targetScript, "Set exception adapter options");
+                        targetScript.exceptionAdapterOptions = null;
+                    }
+
+                    UpdateProperty(
+                        updatedValue => targetScript.exceptionAdapterTypeName = updatedValue,
+                        targetScript.exceptionAdapterTypeName,
+                        newValue,
+                        "Set exception adapter"
+                    );
+                }
+            );
+
+            Type exceptionAdapterType;
+            exceptionAdapterOptionsFade.target = ShouldShowAdapterOptions(targetScript.exceptionAdapterTypeName, out exceptionAdapterType);
+            ShowAdapterOptionsMenu(
+                "Exception adapter options",
+                exceptionAdapterType,
+                options => targetScript.exceptionAdapterOptions = options,
+                targetScript.exceptionAdapterOptions,
+                exceptionAdapterOptionsFade.faded
+            );
+
+            GUI.enabled = guiPreviouslyEnabled;
         }
     }
 }

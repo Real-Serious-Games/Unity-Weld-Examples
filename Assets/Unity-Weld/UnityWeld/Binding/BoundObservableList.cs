@@ -49,6 +49,8 @@ namespace UnityWeld.Binding
 
             source.CollectionChanged += source_CollectionChanged;
             CollectionChanged += BoundObservableList_CollectionChanged;
+
+            cache = new List<DestT>(this);
         }
 
         public BoundObservableList(ObservableList<SourceT> source, Func<SourceT, DestT> itemMap, Action<DestT> added, Action<DestT> removed) :
@@ -147,39 +149,52 @@ namespace UnityWeld.Binding
         /// </summary>
         private void BoundObservableList_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add &&
-                added != null)
+            switch (e.Action)
             {
-                var insertIndex = e.NewStartingIndex;
+                case NotifyCollectionChangedAction.Add:
+                    var insertIndex = e.NewStartingIndex;
 
-                foreach (var item in e.NewItems)
-                {
-                    var typedItem = (DestT)item;
+                    foreach (var item in e.NewItems)
+                    {
+                        var typedItem = (DestT)item;
 
-                    added(typedItem);
+                        if (added != null)
+                        {
+                            added(typedItem);
+                        }
 
-                    cache.Insert(insertIndex, typedItem); // Keep the cache updated as new items come in.
-                    ++insertIndex;
-                }
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                foreach (var item in e.OldItems)
-                {
-                    var typedItem = (DestT)item;
+                        cache.Insert(insertIndex, typedItem); // Keep the cache updated as new items come in.
+                        ++insertIndex;
+                    }
+                    break;
 
-                    removed(typedItem);
+                case NotifyCollectionChangedAction.Remove:
+                    foreach (var item in e.OldItems)
+                    {
+                        var typedItem = (DestT)item;
 
-                    cache.RemoveAt(e.OldStartingIndex); // Keep the cache updated as items are removed.
-                }
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Reset)
-            {
-                foreach (var item in cache)
-                {
-                    removed(item);
-                }
-                cache.Clear();
+                        if (removed != null)
+                        {
+                            removed(typedItem);
+                        }
+
+                        cache.RemoveAt(e.OldStartingIndex); // Keep the cache updated as items are removed.
+                    }
+                    break;
+
+                case NotifyCollectionChangedAction.Reset:
+                    if (removed != null)
+                    {
+                        foreach (var item in cache)
+                        {
+                            removed(item);
+                        }
+                    }
+                    cache.Clear();
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             if (changed != null)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityWeld.Binding;
 using UnityWeld.Binding.Internal;
@@ -10,11 +11,31 @@ namespace UnityWeld_Editor
     [CustomEditor(typeof(OneWayPropertyBinding))]
     class OneWayPropertyBindingEditor : BaseBindingEditor
     {
-        public override void OnInspectorGUI()
+        private OneWayPropertyBinding targetScript;
+
+        private AnimBool viewAdapterOptionsFade;
+
+        private void OnEnable()
         {
             // Initialise reference to target script
-            var targetScript = (OneWayPropertyBinding)target;
+            targetScript = (OneWayPropertyBinding)target;
 
+            Type adapterType;
+
+            viewAdapterOptionsFade = new AnimBool(
+                ShouldShowAdapterOptions(targetScript.viewAdapterTypeName, out adapterType)
+            );
+
+            viewAdapterOptionsFade.valueChanged.AddListener(Repaint);
+        }
+
+        private void OnDisable()
+        {
+            viewAdapterOptionsFade.valueChanged.RemoveListener(Repaint);
+        }
+
+        public override void OnInspectorGUI()
+        {
             Type viewPropertyType;
             ShowViewPropertyMenu(
                 new GUIContent("View property", "Property on the view to bind to"),
@@ -26,6 +47,13 @@ namespace UnityWeld_Editor
                 targetScript.uiPropertyName,
                 out viewPropertyType
             );
+
+            // Don't let the user set anything else until they've chosen a view property.
+            var guiPreviouslyEnabled = GUI.enabled;
+            if (string.IsNullOrEmpty(targetScript.uiPropertyName))
+            {
+                GUI.enabled = false;
+            }
 
             var viewAdapterTypeNames = GetAdapterTypeNames(
                 type => viewPropertyType == null || 
@@ -41,23 +69,31 @@ namespace UnityWeld_Editor
                     // Get rid of old adapter options if we changed the type of the adapter.
                     if (newValue != targetScript.viewAdapterTypeName)
                     {
+                        Undo.RecordObject(targetScript, "Set view adapter options");
                         targetScript.viewAdapterOptions = null;
                     }
 
                     UpdateProperty(
                         updatedValue => targetScript.viewAdapterTypeName = updatedValue,
                         targetScript.viewAdapterTypeName,
-                        newValue
+                        newValue,
+                        "Set view adapter"
                     );
                 }
             );
 
+            Type adapterType;
+            viewAdapterOptionsFade.target = ShouldShowAdapterOptions(targetScript.viewAdapterTypeName, out adapterType);
+
             ShowAdapterOptionsMenu(
                 "View adapter options", 
-                targetScript.viewAdapterTypeName, 
+                adapterType, 
                 options => targetScript.viewAdapterOptions = options,
-                targetScript.viewAdapterOptions
+                targetScript.viewAdapterOptions,
+                viewAdapterOptionsFade.faded
             );
+
+            EditorGUILayout.Space();
 
             var adaptedViewPropertyType = AdaptTypeBackward(viewPropertyType, targetScript.viewAdapterTypeName);
             ShowViewModelPropertyMenu(
@@ -67,6 +103,8 @@ namespace UnityWeld_Editor
                 targetScript.viewModelPropertyName,
                 property => property.PropertyType == adaptedViewPropertyType
             );
+
+            GUI.enabled = guiPreviouslyEnabled;
         }
     }
 }

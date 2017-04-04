@@ -8,6 +8,7 @@ namespace UnityWeld.Binding
     /// <summary>
     /// Base class for binders to Unity MonoBehaviours.
     /// </summary>
+    [HelpURL("https://github.com/Real-Serious-Games/Unity-Weld")]
     public abstract class AbstractMemberBinding : MonoBehaviour, IMemberBinding
     {
         /// <summary>
@@ -40,7 +41,13 @@ namespace UnityWeld.Binding
                 var providedViewModel = components
                     .Select(component => component as IViewModelProvider)
                     .Where(component => component != null)
-                    .FirstOrDefault(viewModelBinding => viewModelBinding.GetViewModelTypeName() == viewModelName && (object)viewModelBinding != this);
+                    .FirstOrDefault(
+                        viewModelBinding => viewModelBinding.GetViewModelTypeName() == viewModelName && 
+#pragma warning disable 252,253 // Warning says unintended reference comparison, but we do want to compare references
+                        (object)viewModelBinding != this
+#pragma warning restore 252,253
+                    );
+
                 if (providedViewModel != null)
                 {
                     return providedViewModel.GetViewModel();

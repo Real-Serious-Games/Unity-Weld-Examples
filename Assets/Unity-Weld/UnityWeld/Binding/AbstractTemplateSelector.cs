@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityWeld.Binding.Internal;
@@ -31,32 +32,44 @@ namespace UnityWeld.Binding
         /// <summary>
         /// All available templates indexed by the view model the are for.
         /// </summary>
-        private readonly IDictionary<string, Template> availableTemplates = new Dictionary<string, Template>();
+        private IDictionary<Type, Template> AvailableTemplates
+        {
+            get
+            {
+                if (availableTemplates == null)
+                {
+                    CacheTemplates();
+                }
+
+                return availableTemplates;
+            }
+        }
+
+        private IDictionary<Type, Template> availableTemplates;
 
         /// <summary>
         /// All the child objects that have been created, indexed by the view they are connected to.
         /// </summary>
         private readonly IDictionary<object, GameObject> instantiatedTemplates = new Dictionary<object, GameObject>();
 
-        protected new void Awake()
-        {
-            Assert.IsNotNull(templatesRoot, "No templates have been assigned.");
-
-            CacheTemplates();
-
-            base.Awake();
-        }
-
         // Cache available templates.
         private void CacheTemplates()
         {
-            availableTemplates.Clear();
+            availableTemplates = new Dictionary<Type, Template>();
 
             var templatesInScene = templatesRoot.GetComponentsInChildren<Template>(true);
             foreach (var template in templatesInScene)
             {
                 template.gameObject.SetActive(false);
-                availableTemplates.Add(template.GetViewModelTypeName(), template);
+                var typeName = template.GetViewModelTypeName();
+                var type = TypeResolver.TypesWithBindingAttribute.FirstOrDefault(t => t.ToString() == typeName);
+                if (type == null)
+                {
+                    Debug.LogError(string.Format("Template object {0} references type {1}, but no matching type with a [Binding] attribute could be found.", template.name, typeName), template);
+                    continue;
+                }
+                
+                availableTemplates.Add(type, template);
             }
         }
 
@@ -68,12 +81,7 @@ namespace UnityWeld.Binding
             Assert.IsNotNull(templateViewModel, "Cannot instantiate child with null view model");
             
             // Select template.
-            var viewModelTypeString = templateViewModel.GetType().ToString();
-            Template selectedTemplate;
-            if (!availableTemplates.TryGetValue(viewModelTypeString, out selectedTemplate))
-            {
-                throw new ApplicationException("Cannot find matching template for: " + viewModelTypeString);
-            }
+            var selectedTemplate = FindTemplateForType(templateViewModel.GetType());
 
             var newObject = Instantiate(selectedTemplate);
             newObject.transform.SetParent(transform, false);
@@ -84,6 +92,61 @@ namespace UnityWeld.Binding
             newObject.InitChildBindings(templateViewModel);
 
             newObject.gameObject.SetActive(true);
+        }
+
+        /// <summary>
+        /// Returns the template that best matches the specified type.
+        /// </summary>
+        private Template FindTemplateForType(Type templateType)
+        {
+            var possibleMatches = FindTypesMatchingTemplate(templateType).ToList();
+
+            if (!possibleMatches.Any())
+            {
+                throw new ApplicationException("Could not find any template matching type " + templateType);
+            }
+
+            var sorted = possibleMatches.OrderBy(m => m.Key);
+            var selectedType = sorted.First();
+
+            if (sorted.Skip(1).Any(m => m.Key == selectedType.Key))
+            {
+                throw new ApplicationException("Multiple templates were found that match type " + templateType
+                    + ". This can be caused by providing multiple templates that match types " + templateType
+                    + " inherits from at the same level. Remove one or provide a template that more specifically matches the type.");
+            }
+
+            return AvailableTemplates[selectedType.Value];
+        }
+
+        /// <summary>
+        /// Recursively look in the type, interfaces it implements and types it inherits
+        /// from for a type that matches a template. Also store how many steps away from 
+        /// the specified template the found template was.
+        /// </summary>
+        private IEnumerable<KeyValuePair<int, Type>> FindTypesMatchingTemplate(Type t, int index = 0)
+        {
+            var baseType = t.BaseType;
+            if (baseType != null && !baseType.IsInterface)
+            {
+                foreach (var type in FindTypesMatchingTemplate(baseType, index + 1))
+                {
+                    yield return type;
+                }
+            }
+
+            foreach (var interfaceType in t.GetInterfaces())
+            {
+                foreach (var type in FindTypesMatchingTemplate(interfaceType, index + 1))
+                {
+                    yield return type;
+                }
+            }
+
+            if (AvailableTemplates.Keys.Contains(t))
+            {
+                yield return new KeyValuePair<int, Type>(index, t);
+            }
         }
 
         /// <summary>

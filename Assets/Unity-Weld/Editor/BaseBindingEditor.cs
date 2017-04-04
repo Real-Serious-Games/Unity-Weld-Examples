@@ -16,13 +16,15 @@ namespace UnityWeld_Editor
         /// <summary>
         /// Sets the specified value and sets dirty to true if it doesn't match the old value.
         /// </summary>
-        protected void UpdateProperty<TValue>(Action<TValue> setter, TValue oldValue, TValue newValue)
+        protected void UpdateProperty<TValue>(Action<TValue> setter, TValue oldValue, TValue newValue, string undoActionName)
             where TValue : class
         {
             if (newValue == oldValue)
             {
                 return;
             }
+
+            Undo.RecordObject(target, undoActionName);
 
             setter(newValue);
 
@@ -77,32 +79,23 @@ namespace UnityWeld_Editor
             Func<PropertyInfo, bool> menuEnabled
         )
         {
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PrefixLabel(label);
-
-            var dropdownPosition = GUILayoutUtility.GetLastRect();
-            dropdownPosition.x += dropdownPosition.width;
-
-            if (GUILayout.Button(new GUIContent(curPropertyValue, label.tooltip), EditorStyles.popup))
-            {
-                InspectorUtils.ShowMenu(
-                    property => string.Concat(property.ReflectedType, "/", property.Name, " : ", property.PropertyType.Name),
-                    menuEnabled,
-                    property => MemberInfoToString(property) == curPropertyValue,
-                    property => UpdateProperty(
-                        propertyValueSetter,
-                        curPropertyValue,
-                        MemberInfoToString(property)
-                    ),
-                    bindableProperties
-                        .OrderBy(property => property.ReflectedType.Name)
-                        .ThenBy(property => property.Name)
-                        .ToArray(),
-                    dropdownPosition
-                );
-            }
-
-            EditorGUILayout.EndHorizontal();
+            InspectorUtils.DoPopup(
+                new GUIContent(curPropertyValue),
+                label,
+                property => string.Concat(property.ReflectedType, "/", property.Name, " : ", property.PropertyType.Name),
+                menuEnabled,
+                property => MemberInfoToString(property) == curPropertyValue,
+                property => UpdateProperty(
+                    propertyValueSetter,
+                    curPropertyValue,
+                    MemberInfoToString(property),
+                    "Set view-model property"
+                ),
+                bindableProperties
+                    .OrderBy(property => property.ReflectedType.Name)
+                    .ThenBy(property => property.Name)
+                    .ToArray()
+            );
         }
 
         /// <summary>
@@ -137,7 +130,8 @@ namespace UnityWeld_Editor
                 UpdateProperty(
                     propertyValueSetter,
                     curPropertyValue,
-                    MemberInfoToString(newSelectedProperty)
+                    MemberInfoToString(newSelectedProperty),
+                    "Set view property"
                 );
 
                 selectedPropertyType = newSelectedProperty.PropertyType;
@@ -186,8 +180,36 @@ namespace UnityWeld_Editor
             UpdateProperty(
                 propertyValueSetter,
                 curPropertyValue,
-                BindableEventToString(selectedEvent)
+                BindableEventToString(selectedEvent),
+                "Set bound event"
             );
+        }
+
+        /// <summary>
+        /// Returns whether or not we should show an adapter options selector for the specified 
+        /// adapter type and finds the type for the specified type name.
+        /// </summary>
+        protected bool ShouldShowAdapterOptions(string adapterTypeName, out Type adapterType)
+        {
+            // Don't show selector until an adapter has been selected.
+            if (string.IsNullOrEmpty(adapterTypeName))
+            {
+                adapterType = null;
+                return false;
+            }
+
+            var adapterAttribute = FindAdapterAttribute(adapterTypeName);
+            if (adapterAttribute == null)
+            {
+                adapterType = null;
+                return false;
+            }
+
+            adapterType = adapterAttribute.OptionsType;
+
+            // Don't show selector unless the current adapter has its own overridden
+            // adapter options type.
+            return adapterType != typeof(AdapterOptions);
         }
 
         /// <summary>
@@ -195,39 +217,33 @@ namespace UnityWeld_Editor
         /// </summary>
         protected void ShowAdapterOptionsMenu(
             string label, 
-            string adapterTypeName, 
+            Type adapterOptionsType, 
             Action<AdapterOptions> propertyValueSetter, 
-            AdapterOptions currentPropertyValue
+            AdapterOptions currentPropertyValue,
+            float fadeAmount
         )
         {
-            // Don't show selector until an adapter has been selected.
-            if (string.IsNullOrEmpty(adapterTypeName))
+            if (EditorGUILayout.BeginFadeGroup(fadeAmount))
             {
-                return;
+                EditorGUI.indentLevel++;
+
+                var newAdapterOptions = (AdapterOptions)EditorGUILayout.ObjectField(
+                    label, 
+                    currentPropertyValue, 
+                    adapterOptionsType, 
+                    false
+                );
+
+                EditorGUI.indentLevel--;
+
+                UpdateProperty(
+                    propertyValueSetter, 
+                    currentPropertyValue, 
+                    newAdapterOptions,
+                    "Set adapter options"
+                );
             }
-
-            var adapterType = FindAdapterAttribute(adapterTypeName);
-            if (adapterType == null)
-            {
-                return;
-            }
-            var adapterOptionsType = adapterType.OptionsType;
-
-            // Don't show selector unless the current adapter has its own overridden
-            // adapter options type.
-            if (adapterOptionsType == typeof(AdapterOptions))
-            {
-                return;
-            }
-
-            var newAdapterOptions = (AdapterOptions)EditorGUILayout.ObjectField(
-                label, 
-                currentPropertyValue, 
-                adapterOptionsType, 
-                false
-            );
-
-            UpdateProperty(propertyValueSetter, currentPropertyValue, newAdapterOptions);
+            EditorGUILayout.EndFadeGroup();
         }
 
         /// <summary>

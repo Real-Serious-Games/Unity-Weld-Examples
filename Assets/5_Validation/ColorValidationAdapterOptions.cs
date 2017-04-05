@@ -8,7 +8,7 @@ using UnityWeld.Binding;
 
 namespace Assets._5_Validation
 {
-    [CreateAssetMenu(menuName = "Adapter options/Color validation adapter")]
+    [CreateAssetMenu(menuName = "Unity Weld/Adapter options/Color validation adapter")]
     public class ColorValidationAdapterOptions : AdapterOptions
     {
         [Header("Valid color")]

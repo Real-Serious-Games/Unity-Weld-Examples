@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEditor;
 using UnityWeld.Binding;
 using UnityWeld.Binding.Internal;
@@ -15,6 +15,11 @@ namespace UnityWeld_Editor
     {
         private SubViewModelBinding targetScript;
 
+        /// <summary>
+        /// Whether or not the value on our target matches its prefab.
+        /// </summary>
+        private bool propertyPrefabModified;
+
         private void OnEnable()
         {
             targetScript = (SubViewModelBinding)target;
@@ -22,34 +27,74 @@ namespace UnityWeld_Editor
 
         public override void OnInspectorGUI()
         {
+            UpdatePrefabModifiedProperties();
+
             var bindableProperties = FindBindableProperties();
 
+            var defaultLabelStyle = EditorStyles.label.fontStyle;
+            EditorStyles.label.fontStyle = propertyPrefabModified 
+                ? FontStyle.Bold 
+                : defaultLabelStyle;
+
             ShowViewModelPropertyMenu(
-                new GUIContent("Sub view-model property", "The property on the top level view model containing the sub view-model"),
+                new GUIContent(
+                    "Sub view-model property", 
+                    "The property on the top level view model containing the sub view-model"
+                ),
                 bindableProperties,
                 updatedValue => 
                 {
-                    targetScript.viewModelPropertyName = updatedValue;
+                    targetScript.ViewModelPropertyName = updatedValue;
 
-                    targetScript.viewModelTypeName = bindableProperties
-                        .Where(prop => MemberInfoToString(prop) == updatedValue)
+                    targetScript.ViewModelTypeName = bindableProperties
+                        .Where(prop => prop.ToString() == updatedValue)
                         .Single()
-                        .PropertyType.ToString();
+                        .Member.PropertyType.ToString();
                 },
-                targetScript.viewModelPropertyName,
+                targetScript.ViewModelPropertyName,
                 p => true
             );
+
+            EditorStyles.label.fontStyle = defaultLabelStyle;
         }
 
-        private PropertyInfo[] FindBindableProperties()
+        private BindableMember<PropertyInfo>[] FindBindableProperties()
         {
             return TypeResolver.FindBindableProperties(targetScript)
-                .Where(property => property
-                    .PropertyType
+                .Where(prop => prop.Member.PropertyType
                     .GetCustomAttributes(typeof(BindingAttribute), false)
                     .Any()
                 )
                 .ToArray();
+        }
+
+        /// <summary>
+        /// Check whether each of the properties on the object have been changed 
+        /// from the value in the prefab.
+        /// </summary>
+        private void UpdatePrefabModifiedProperties()
+        {
+            var property = serializedObject.GetIterator();
+            // Need to call Next(true) to get the first child. Once we have it, Next(false)
+            // will iterate through the properties.
+
+            propertyPrefabModified = false;
+            property.Next(true);
+            do
+            {
+                switch (property.name)
+                {
+                    case "viewModelPropertyName": 
+                    case "viewModelTypeName":
+                        propertyPrefabModified = property.prefabOverride 
+                            || propertyPrefabModified;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            while (property.Next(false));
         }
     }
 }

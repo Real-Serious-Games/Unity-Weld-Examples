@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Events;
+using UnityWeld.Binding.Exceptions;
 
 namespace UnityWeld.Binding.Internal
 {
@@ -46,25 +48,47 @@ namespace UnityWeld.Binding.Internal
         /// </summary>
         private UnityEventBinderBase unityEventBinder;
 
+        private bool disposed;
+
         public UnityEventWatcher(Component component, string eventName, Action action)
         {
+            Assert.IsNotNull(component);
+            Assert.IsFalse(string.IsNullOrEmpty(eventName));
+            Assert.IsNotNull(action);
+
             unityEventBinder = UnityEventBinderFactory.Create(GetBoundEvent(eventName, component).UnityEvent, action);
         }
 
         public void Dispose()
         {
-            if (unityEventBinder != null)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing && unityEventBinder != null)
             {
                 unityEventBinder.Dispose();
                 unityEventBinder = null;
             }
+
+            disposed = true;
         }
+
 
         /// <summary>
         /// Get all bindable Unity events from a particular component.
         /// </summary>
         private static IEnumerable<BindableEvent> GetBindableEvents(Component component)
         {
+            Assert.IsNotNull(component, "Cannot get bindinable events of a null component.");
+
             var type = component.GetType();
 
             var bindableEventsFromProperties = type
@@ -83,7 +107,7 @@ namespace UnityWeld.Binding.Internal
                 .GetFields(BindingFlags.Instance | BindingFlags.Public)
                 .Where(fieldInfo => fieldInfo.FieldType.IsSubclassOf(typeof(UnityEventBase)))
                 .Where(fieldInfo => !fieldInfo.GetCustomAttributes(typeof(ObsoleteAttribute), true).Any())
-                .Select(fieldInfo => new BindableEvent()
+                .Select(fieldInfo => new BindableEvent
                 {
                     UnityEvent = (UnityEventBase)fieldInfo.GetValue(component),
                     Name = fieldInfo.Name,
@@ -99,13 +123,16 @@ namespace UnityWeld.Binding.Internal
         /// </summary>
         private static BindableEvent GetBoundEvent(string boundEventName, Component component)
         {
+            Assert.IsNotNull(component);
+            Assert.IsFalse(string.IsNullOrEmpty(boundEventName));
+
             var componentType = component.GetType();
             var boundEvent = GetBindableEvents(component)
                 .FirstOrDefault();
 
             if (boundEvent == null)
             {
-                throw new ApplicationException(string.Format("Could not bind to event \"{0}\" on component \"{1}\".", boundEventName, componentType));
+                throw new InvalidEventException(string.Format("Could not bind to event \"{0}\" on component \"{1}\".", boundEventName, componentType));
             }
 
             return boundEvent;
@@ -116,7 +143,10 @@ namespace UnityWeld.Binding.Internal
         /// </summary>
         public static BindableEvent[] GetBindableEvents(GameObject gameObject) //todo: Consider moving this to TypeResolver.
         {
+            Assert.IsNotNull(gameObject);
+
             return gameObject.GetComponents(typeof(Component))
+                .Where(component => component != null)
                 .SelectMany(GetBindableEvents)
                 .ToArray();
         }

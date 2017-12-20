@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using UnityEngine;
+using UnityEngine.Serialization;
 using UnityWeld.Binding.Internal;
 
 namespace UnityWeld.Binding
@@ -12,24 +13,53 @@ namespace UnityWeld.Binding
     public class OneWayPropertyBinding : AbstractMemberBinding
     {
         /// <summary>
-        /// Type of the adapter we're using to adapt between the view model property and UI property.
+        /// Type of the adapter we're using to adapt between the view model property 
+        /// and UI property.
         /// </summary>
-        public string viewAdapterTypeName;
+        public string ViewAdapterTypeName
+        {
+            get { return viewAdapterTypeName; }
+            set { viewAdapterTypeName = value; }
+        }
+
+        [SerializeField]
+        private string viewAdapterTypeName;
 
         /// <summary>
         /// Options for adapting from the view model to the UI property.
         /// </summary>
-        public AdapterOptions viewAdapterOptions;
+        public AdapterOptions ViewAdapterOptions
+        {
+            get { return viewAdapterOptions; }
+            set { viewAdapterOptions = value; }
+        }
+
+        [SerializeField]
+        private AdapterOptions viewAdapterOptions;
 
         /// <summary>
         /// Name of the property in the view model to bind.
         /// </summary>
-        public string viewModelPropertyName;
+        public string ViewModelPropertyName
+        {
+            get { return viewModelPropertyName; }
+            set { viewModelPropertyName = value; }
+        }
+
+        [SerializeField]
+        private string viewModelPropertyName;
 
         /// <summary>
-        /// UI Property to update when value changes.
+        /// Property on the view to update when value changes.
         /// </summary>
-        public string uiPropertyName;
+        public string ViewPropertyName
+        {
+            get { return viewPropertyName; }
+            set { viewPropertyName = value; }
+        }
+
+        [SerializeField, FormerlySerializedAs("uiPropertyName")]
+        private string viewPropertyName;
 
         /// <summary>
         /// Watches the view-model for changes that must be propagated to the view.
@@ -40,7 +70,7 @@ namespace UnityWeld.Binding
         {
             string propertyName;
             Component view;
-            ParseViewEndPointReference(uiPropertyName, out propertyName, out view);
+            ParseViewEndPointReference(viewPropertyName, out propertyName, out view);
 
             var viewModelEndPoint = MakeViewModelEndPoint(viewModelPropertyName, null, null);
 

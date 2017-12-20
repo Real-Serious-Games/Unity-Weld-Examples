@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using UnityEngine;
+using UnityWeld.Binding.Exceptions;
 using UnityWeld.Binding.Internal;
 
 namespace UnityWeld.Binding
@@ -34,12 +35,26 @@ namespace UnityWeld.Binding
         /// <summary>
         /// Name of the property in the view-model that contains the sub-viewmodel.
         /// </summary>
-        public string viewModelPropertyName;
+        public string ViewModelPropertyName
+        {
+            get { return viewModelPropertyName; }
+            set { viewModelPropertyName = value; }
+        }
+
+        [SerializeField]
+        private string viewModelPropertyName;
 
         /// <summary>
         /// Name of the type of the view model we're binding to. Set from the Unity inspector.
         /// </summary>
-        public string viewModelTypeName;
+        public string ViewModelTypeName
+        {
+            get { return viewModelTypeName; }
+            set { viewModelTypeName = value; }
+        }
+
+        [SerializeField]
+        private string viewModelTypeName;
 
         /// <summary>
         /// Watches the view-model proper for changes.
@@ -63,7 +78,7 @@ namespace UnityWeld.Binding
             var propertyInfo = parentViewModel.GetType().GetProperty(propertyName);
             if (propertyInfo == null)
             {
-                throw new ApplicationException(string.Format("Could not find property \"{0}\" on view model \"{1}\".", propertyName, parentViewModel.GetType()));
+                throw new MemberNotFoundException(string.Format("Could not find property \"{0}\" on view model \"{1}\".", propertyName, parentViewModel.GetType()));
             }
 
             viewModel = propertyInfo.GetValue(parentViewModel, null);

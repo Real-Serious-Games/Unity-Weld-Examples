@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityWeld.Binding.Exceptions;
 
 namespace UnityWeld.Binding.Internal
 {
@@ -116,7 +117,7 @@ namespace UnityWeld.Binding.Internal
 
             if (matchingTypes.Skip(1).Any())
             {
-                throw new ApplicationException("Multiple types match: " + typeName);
+                throw new AmbiguousTypeException("Multiple types match: " + typeName);
             }
 
             return matchingTypes.First();
@@ -144,7 +145,7 @@ namespace UnityWeld.Binding.Internal
 
             if (type == null)
             {
-                throw new ApplicationException("Could not find the specified view model \"" + viewModelTypeName + "\"");
+                throw new ViewModelNotFoundException("Could not find the specified view model \"" + viewModelTypeName + "\"");
             }
 
             return type;
@@ -174,6 +175,13 @@ namespace UnityWeld.Binding.Internal
                     var viewModelBinding = component as IViewModelProvider;
                     if (viewModelBinding != null)
                     {
+                        var viewModelTypeName = viewModelBinding.GetViewModelTypeName();
+                        // Ignore view model bindings that haven't been set up yet.
+                        if (string.IsNullOrEmpty(viewModelTypeName))
+                        {
+                            continue;
+                        }
+
                         foundAtLeastOneBinding = true;
 
                         yield return GetViewModelType(viewModelBinding.GetViewModelTypeName());
@@ -199,11 +207,13 @@ namespace UnityWeld.Binding.Internal
         /// <summary>
         /// Find bindable properties in available view models.
         /// </summary>
-        public static PropertyInfo[] FindBindableProperties(AbstractMemberBinding target)
+        public static BindableMember<PropertyInfo>[] FindBindableProperties(AbstractMemberBinding target)
         {
             return FindAvailableViewModelTypes(target)
-                .SelectMany(type => type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                .Where(property => property
+                .SelectMany(type => GetPublicProperties(type)
+                    .Select(p => new BindableMember<PropertyInfo>(p, type))
+                )
+                .Where(p => p.Member
                     .GetCustomAttributes(typeof(BindingAttribute), false)
                     .Any() // Filter out properties that don't have [Binding].
                 )
@@ -211,25 +221,60 @@ namespace UnityWeld.Binding.Internal
         }
 
         /// <summary>
+        /// Get all the declared and inherited public properties from a class or interface.
+        ///
+        /// https://stackoverflow.com/questions/358835/getproperties-to-return-all-properties-for-an-interface-inheritance-hierarchy#answer-26766221
+        /// </summary>
+        private static IEnumerable<PropertyInfo> GetPublicProperties(Type type)
+        {
+            if (!type.IsInterface)
+            {
+                return type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            }
+
+            return (new[] { type })
+                .Concat(type.GetInterfaces())
+                .SelectMany(i => i.GetProperties(BindingFlags.Public | BindingFlags.Instance));
+        }
+
+        /// <summary>
+        /// Get all the declared and inherited public methods from a class or interface.
+        /// </summary>
+        private static IEnumerable<MethodInfo> GetPublicMethods(Type type)
+        {
+            if (!type.IsInterface)
+            {
+                return type.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+            }
+
+            return (new[] { type })
+                .Concat(type.GetInterfaces())
+                .SelectMany(i => i.GetMethods(BindingFlags.Public | BindingFlags.Instance));
+        }
+
+        /// <summary>
         /// Get a list of methods in the view model that we can bind to.
         /// </summary>
-        public static MethodInfo[] FindBindableMethods(EventBinding targetScript)
+        public static BindableMember<MethodInfo>[] FindBindableMethods(EventBinding targetScript)
         {
             return FindAvailableViewModelTypes(targetScript)
-                .SelectMany(type => type.GetMethods(BindingFlags.Public | BindingFlags.Instance))
-                .Where(method => method.GetParameters().Length == 0)
-                .Where(method => method.GetCustomAttributes(typeof(BindingAttribute), false).Any() && !method.Name.StartsWith("get_")) // Exclude property getters, since we aren't doing anything with the return value of the bound method anyway.
+                .SelectMany(type => GetPublicMethods(type)
+                    .Select(m => new BindableMember<MethodInfo>(m, type))
+                )
+                .Where(m => m.Member.GetParameters().Length == 0)
+                .Where(m => m.Member.GetCustomAttributes(typeof(BindingAttribute), false).Any() 
+                    && !m.MemberName.StartsWith("get_")) // Exclude property getters, since we aren't doing anything with the return value of the bound method anyway.
                 .ToArray();
         }
 
         /// <summary>
         /// Find collection properties that can be data-bound.
         /// </summary>
-        public static PropertyInfo[] FindBindableCollectionProperties(CollectionBinding target)
+        public static BindableMember<PropertyInfo>[] FindBindableCollectionProperties(CollectionBinding target)
         {
             return FindBindableProperties(target)
-                .Where(property => typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
-                .Where(property => !typeof(string).IsAssignableFrom(property.PropertyType))
+                .Where(p => typeof(IEnumerable).IsAssignableFrom(p.Member.PropertyType))
+                .Where(p => !typeof(string).IsAssignableFrom(p.Member.PropertyType))
                 .ToArray();
         }
     }

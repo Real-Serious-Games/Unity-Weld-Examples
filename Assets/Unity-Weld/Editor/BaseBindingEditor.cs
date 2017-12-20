@@ -73,7 +73,7 @@ namespace UnityWeld_Editor
         /// </summary>
         protected void ShowViewModelPropertyMenu(
             GUIContent label,
-            PropertyInfo[] bindableProperties,
+            BindableMember<PropertyInfo>[] bindableProperties,
             Action<string> propertyValueSetter,
             string curPropertyValue,
             Func<PropertyInfo, bool> menuEnabled
@@ -82,18 +82,89 @@ namespace UnityWeld_Editor
             InspectorUtils.DoPopup(
                 new GUIContent(curPropertyValue),
                 label,
-                property => string.Concat(property.ReflectedType, "/", property.Name, " : ", property.PropertyType.Name),
-                menuEnabled,
-                property => MemberInfoToString(property) == curPropertyValue,
-                property => UpdateProperty(
+                prop => string.Concat(prop.ViewModelType, "/", prop.MemberName, " : ", prop.Member.PropertyType.Name),
+                prop => menuEnabled(prop.Member),
+                prop => prop.ToString() == curPropertyValue,
+                prop =>
+                {
+                    UpdateProperty(
+                        propertyValueSetter,
+                        curPropertyValue,
+                        prop.ToString(),
+                        "Set view-model property"
+                    );
+                },
+                bindableProperties
+                    .OrderBy(property => property.ViewModelTypeName)
+                    .ThenBy(property => property.MemberName)
+                    .ToArray()
+            );
+        }
+
+        /// <summary>
+        /// Class used to wrap property infos
+        /// </summary>
+        private class OptionInfo
+        {
+            public OptionInfo(string menuName, BindableMember<PropertyInfo> property)
+            {
+                this.MenuName = menuName;
+                this.Property = property;
+            }
+
+            public string MenuName { get; private set; }
+
+            public BindableMember<PropertyInfo> Property { get; private set; }
+        }
+
+        /// <summary>
+        /// The string used to show that no option is selected in the property menu.
+        /// </summary>
+        private static readonly string NoneOptionString = "None";
+
+        /// <summary>
+        /// Display a popup menu for selecting a property from a view-model.
+        /// </summary>
+        protected void ShowViewModelPropertyMenuWithNone(
+            GUIContent label,
+            BindableMember<PropertyInfo>[] bindableProperties,
+            Action<string> propertyValueSetter,
+            string curPropertyValue,
+            Func<PropertyInfo, bool> menuEnabled
+        )
+        {
+            var options = bindableProperties
+                .Select(prop => new OptionInfo(
+                    string.Concat(prop.ViewModelType, "/", prop.MemberName, " : ", prop.Member.PropertyType.Name), 
+                    prop
+                ))
+                .OrderBy(option => option.Property.ViewModelTypeName)
+                .ThenBy(option => option.Property.MemberName);
+
+            var noneOption = new OptionInfo(NoneOptionString, null);
+
+            InspectorUtils.DoPopup(
+                new GUIContent(string.IsNullOrEmpty(curPropertyValue) ? NoneOptionString : curPropertyValue),
+                label,
+                option => option.MenuName,
+                option => option.MenuName == NoneOptionString ? true : menuEnabled(option.Property.Member),
+                option =>
+                {
+                    if (option == noneOption)
+                    {
+                        return string.IsNullOrEmpty(curPropertyValue);
+                    }
+                    
+                    return option.ToString() == curPropertyValue;
+                },
+                option => UpdateProperty(
                     propertyValueSetter,
                     curPropertyValue,
-                    MemberInfoToString(property),
+                    option.Property == null ? string.Empty : option.ToString(),
                     "Set view-model property"
                 ),
-                bindableProperties
-                    .OrderBy(property => property.ReflectedType.Name)
-                    .ThenBy(property => property.Name)
+                new[] { noneOption }
+                    .Concat(options)
                     .ToArray()
             );
         }
@@ -103,22 +174,22 @@ namespace UnityWeld_Editor
         /// </summary>
         protected void ShowViewPropertyMenu(
             GUIContent label, 
-            PropertyInfo[] properties, 
+            BindableMember<PropertyInfo>[] properties, 
             Action<string> propertyValueSetter,
             string curPropertyValue,
             out Type selectedPropertyType
         )
         {
             var propertyNames = properties
-                .Select(MemberInfoToString)
+                .Select(m => m.ToString())
                 .ToArray();
             var selectedIndex = Array.IndexOf(propertyNames, curPropertyValue);
             var content = properties.Select(prop => new GUIContent(string.Concat(
-                    prop.ReflectedType.Name, 
+                    prop.ViewModelTypeName, 
                     "/",
-                    prop.Name, 
+                    prop.MemberName, 
                     " : ",
-                    prop.PropertyType.Name
+                    prop.Member.PropertyType.Name
                 )))
                 .ToArray();
 
@@ -130,11 +201,11 @@ namespace UnityWeld_Editor
                 UpdateProperty(
                     propertyValueSetter,
                     curPropertyValue,
-                    MemberInfoToString(newSelectedProperty),
+                    newSelectedProperty.ToString(),
                     "Set view property"
                 );
 
-                selectedPropertyType = newSelectedProperty.PropertyType;
+                selectedPropertyType = newSelectedProperty.Member.PropertyType;
             }
             else
             {
@@ -144,7 +215,7 @@ namespace UnityWeld_Editor
                     return;
                 }
 
-                selectedPropertyType = properties[selectedIndex].PropertyType;
+                selectedPropertyType = properties[selectedIndex].Member.PropertyType;
             }
         }
 
@@ -189,7 +260,7 @@ namespace UnityWeld_Editor
         /// Returns whether or not we should show an adapter options selector for the specified 
         /// adapter type and finds the type for the specified type name.
         /// </summary>
-        protected bool ShouldShowAdapterOptions(string adapterTypeName, out Type adapterType)
+        protected static bool ShouldShowAdapterOptions(string adapterTypeName, out Type adapterType)
         {
             // Don't show selector until an adapter has been selected.
             if (string.IsNullOrEmpty(adapterTypeName))
@@ -249,7 +320,7 @@ namespace UnityWeld_Editor
         /// <summary>
         /// Find the adapter attribute for a named adapter type.
         /// </summary>
-        protected AdapterAttribute FindAdapterAttribute(string adapterName)
+        protected static AdapterAttribute FindAdapterAttribute(string adapterName)
         {
             if (!string.IsNullOrEmpty(adapterName))
             {
@@ -266,7 +337,7 @@ namespace UnityWeld_Editor
         /// <summary>
         /// Pass a type through an adapter and get the result.
         /// </summary>
-        protected Type AdaptTypeBackward(Type inputType, string adapterName)
+        protected static Type AdaptTypeBackward(Type inputType, string adapterName)
         {
             var adapterAttribute = FindAdapterAttribute(adapterName);
 
@@ -276,19 +347,11 @@ namespace UnityWeld_Editor
         /// <summary>
         /// Pass a type through an adapter and get the result.
         /// </summary>
-        protected Type AdaptTypeForward(Type inputType, string adapterName)
+        protected static Type AdaptTypeForward(Type inputType, string adapterName)
         {
             var adapterAttribute = FindAdapterAttribute(adapterName);
 
             return adapterAttribute != null ? adapterAttribute.OutputType : inputType;
-        }
-
-        /// <summary>
-        /// Convert a MemberInfo to a uniquely identifiable string.
-        /// </summary>
-        protected static string MemberInfoToString(MemberInfo member)
-        {
-            return string.Concat(member.ReflectedType.ToString(), ".", member.Name);
         }
 
         /// <summary>

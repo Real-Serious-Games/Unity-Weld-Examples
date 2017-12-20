@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Reflection;
 using UnityEngine;
+using UnityWeld.Binding.Exceptions;
 using UnityWeld.Binding.Internal;
 
 namespace UnityWeld.Binding
@@ -24,15 +25,27 @@ namespace UnityWeld.Binding
             Disconnect();
 
             string propertyName;
-            ParseViewModelEndPointReference(viewModelPropertyName, out propertyName, out viewModel);
+            ParseViewModelEndPointReference(
+                ViewModelPropertyName, 
+                out propertyName, 
+                out viewModel
+            );
 
-            viewModelPropertyWatcher = new PropertyWatcher(viewModel, propertyName, InitalizeTemplate);
+            viewModelPropertyWatcher = new PropertyWatcher(
+                viewModel, 
+                propertyName, 
+                InitalizeTemplate
+            );
 
             // Get property from view model.
             viewModelProperty = viewModel.GetType().GetProperty(propertyName);
             if (viewModelProperty == null)
             {
-                throw new ApplicationException("Expected property " + viewModelPropertyName + ", but was not found.");
+                throw new MemberNotFoundException(string.Format(
+                    "Expected property {0} on type {1}, but was not found.", 
+                    propertyName, 
+                    viewModel.GetType().Name
+                ));
             }
 
             InitalizeTemplate();
@@ -66,7 +79,10 @@ namespace UnityWeld.Binding
             var viewModelPropertyValue = viewModelProperty.GetValue(viewModel, null);
             if (viewModelPropertyValue == null)
             {
-                throw new ApplicationException("Cannot bind to null property in view: " + viewModelPropertyName);
+                throw new PropertyNullException(string.Format(
+                    "TemplateBinding cannot bind to null property in view: {0}.", 
+                    ViewModelPropertyName
+                ));
             }
 
             InstantiateTemplate(viewModelPropertyValue);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
@@ -17,20 +17,38 @@ namespace UnityWeld_Editor
         private AnimBool viewModelAdapterOptionsFade;
         private AnimBool exceptionAdapterOptionsFade;
 
+        // Whether properties in the target script differ from the value in the prefab.
+        // Needed to know which ones to display as bold in the inspector.
+        private bool viewEventPrefabModified;
+        private bool viewPropertyPrefabModified;
+        private bool viewAdapterPrefabModified;
+        private bool viewAdapterOptionsPrefabModified;
+
+        private bool viewModelPropertyPrefabModified;
+        private bool viewModelAdapterPrefabModified;
+        private bool viewModelAdapterOptionsPrefabModified;
+
+        private bool exceptionPropertyPrefabModified;
+        private bool exceptionAdapterPrefabModified;
+        private bool exceptionAdapterOptionsPrefabModified;
+
         private void OnEnable()
         {
             targetScript = (TwoWayPropertyBinding)target;
 
             Type adapterType;
-            viewAdapterOptionsFade = new AnimBool(
-                ShouldShowAdapterOptions(targetScript.viewAdapterTypeName, out adapterType)
-            );
-            viewModelAdapterOptionsFade = new AnimBool(
-                ShouldShowAdapterOptions(targetScript.viewModelAdapterTypeName, out adapterType)
-            );
-            exceptionAdapterOptionsFade = new AnimBool(
-                ShouldShowAdapterOptions(targetScript.exceptionAdapterTypeName, out adapterType)
-            );
+            viewAdapterOptionsFade = new AnimBool(ShouldShowAdapterOptions(
+                targetScript.ViewAdapterTypeName, 
+                out adapterType
+            ));
+            viewModelAdapterOptionsFade = new AnimBool(ShouldShowAdapterOptions(
+                targetScript.ViewModelAdapterTypeName, 
+                out adapterType
+            ));
+            exceptionAdapterOptionsFade = new AnimBool(ShouldShowAdapterOptions(
+                targetScript.ExceptionAdapterTypeName, 
+                out adapterType
+            ));
 
             viewAdapterOptionsFade.valueChanged.AddListener(Repaint);
             viewModelAdapterOptionsFade.valueChanged.AddListener(Repaint);
@@ -46,114 +64,165 @@ namespace UnityWeld_Editor
 
         public override void OnInspectorGUI()
         {
+            UpdatePrefabModifiedProperties();
+
+            var defaultLabelStyle = EditorStyles.label.fontStyle;
+
+            EditorStyles.label.fontStyle = viewEventPrefabModified 
+                ? FontStyle.Bold 
+                : defaultLabelStyle;
+
             ShowEventMenu(
                 UnityEventWatcher.GetBindableEvents(targetScript.gameObject)
                     .OrderBy(evt => evt.Name)
                     .ToArray(),
-                updatedValue => targetScript.uiEventName = updatedValue,
-                targetScript.uiEventName
+                updatedValue => targetScript.ViewEventName = updatedValue,
+                targetScript.ViewEventName
             );
+
+            EditorStyles.label.fontStyle = viewPropertyPrefabModified 
+                ? FontStyle.Bold 
+                : defaultLabelStyle;
 
             Type viewPropertyType;
             ShowViewPropertyMenu(
                 new GUIContent("View property", "Property on the view to bind to"),
                 PropertyFinder.GetBindableProperties(targetScript.gameObject)
-                    .OrderBy(property => property.ReflectedType.Name)
-                    .ThenBy(property => property.Name)
+                    .OrderBy(prop => prop.ViewModelTypeName)
+                    .ThenBy(prop => prop.MemberName)
                     .ToArray(),
-                updatedValue => targetScript.uiPropertyName = updatedValue,
-                targetScript.uiPropertyName,
+                updatedValue => targetScript.ViewPropertName = updatedValue,
+                targetScript.ViewPropertName,
                 out viewPropertyType
             );
 
             // Don't let the user set other options until they've set the event and view property.
             var guiPreviouslyEnabled = GUI.enabled;
-            if (string.IsNullOrEmpty(targetScript.uiEventName) || string.IsNullOrEmpty(targetScript.uiPropertyName))
+            if (string.IsNullOrEmpty(targetScript.ViewEventName) 
+                || string.IsNullOrEmpty(targetScript.ViewPropertName))
             {
                 GUI.enabled = false;
             }
 
             var viewAdapterTypeNames = GetAdapterTypeNames(
-                type => viewPropertyType == null || 
+                type => viewPropertyType == null ||
                     TypeResolver.FindAdapterAttribute(type).OutputType == viewPropertyType
             );
 
+            EditorStyles.label.fontStyle = viewAdapterPrefabModified 
+                ? FontStyle.Bold 
+                : defaultLabelStyle;
+
             ShowAdapterMenu(
-                new GUIContent("View adapter", "Adapter that converts values sent from the view-model to the view."),
+                new GUIContent(
+                    "View adapter", 
+                    "Adapter that converts values sent from the view-model to the view."
+                ),
                 viewAdapterTypeNames,
-                targetScript.viewAdapterTypeName,
+                targetScript.ViewAdapterTypeName,
                 newValue =>
                 {
                     // Get rid of old adapter options if we changed the type of the adapter.
-                    if (newValue != targetScript.viewAdapterTypeName)
+                    if (newValue != targetScript.ViewAdapterTypeName)
                     {
                         Undo.RecordObject(targetScript, "Set view adapter options");
-                        targetScript.viewAdapterOptions = null;
+                        targetScript.ViewAdapterOptions = null;
                     }
 
                     UpdateProperty(
-                        updatedValue => targetScript.viewAdapterTypeName = updatedValue,
-                        targetScript.viewAdapterTypeName,
+                        updatedValue => targetScript.ViewAdapterTypeName = updatedValue,
+                        targetScript.ViewAdapterTypeName,
                         newValue,
                         "Set view adapter"
                     );
                 }
             );
 
+            EditorStyles.label.fontStyle = viewAdapterOptionsPrefabModified 
+                ? FontStyle.Bold 
+                : defaultLabelStyle;
+
             Type viewAdapterType;
-            viewAdapterOptionsFade.target = ShouldShowAdapterOptions(targetScript.viewAdapterTypeName, out viewAdapterType);
+            viewAdapterOptionsFade.target = ShouldShowAdapterOptions(
+                targetScript.ViewAdapterTypeName, 
+                out viewAdapterType
+            );
             ShowAdapterOptionsMenu(
                 "View adapter options",
                 viewAdapterType,
-                options => targetScript.viewAdapterOptions = options,
-                targetScript.viewAdapterOptions,
+                options => targetScript.ViewAdapterOptions = options,
+                targetScript.ViewAdapterOptions,
                 viewAdapterOptionsFade.faded
             );
 
             EditorGUILayout.Space();
 
-            var adaptedViewPropertyType = AdaptTypeBackward(viewPropertyType, targetScript.viewAdapterTypeName);
+            EditorStyles.label.fontStyle = viewModelPropertyPrefabModified 
+                ? FontStyle.Bold 
+                : defaultLabelStyle;
+
+            var adaptedViewPropertyType = AdaptTypeBackward(
+                viewPropertyType, 
+                targetScript.ViewAdapterTypeName
+            );
             ShowViewModelPropertyMenu(
-                new GUIContent("View-model property", "Property on the view-model to bind to."),
+                new GUIContent(
+                    "View-model property", 
+                    "Property on the view-model to bind to."
+                ),
                 TypeResolver.FindBindableProperties(targetScript),
-                updatedValue => targetScript.viewModelPropertyName = updatedValue,
-                targetScript.viewModelPropertyName,
-                property => property.PropertyType == adaptedViewPropertyType
+                updatedValue => targetScript.ViewModelPropertyName = updatedValue,
+                targetScript.ViewModelPropertyName,
+                prop => prop.PropertyType == adaptedViewPropertyType
             );
 
             var viewModelAdapterTypeNames = GetAdapterTypeNames(
-                type => adaptedViewPropertyType == null || 
+                type => adaptedViewPropertyType == null ||
                     TypeResolver.FindAdapterAttribute(type).OutputType == adaptedViewPropertyType
             );
 
+            EditorStyles.label.fontStyle = viewModelAdapterPrefabModified 
+                ? FontStyle.Bold 
+                : defaultLabelStyle;
+
             ShowAdapterMenu(
-                new GUIContent("View-model adapter", "Adapter that converts from the view back to the view-model"),
+                new GUIContent(
+                    "View-model adapter", 
+                    "Adapter that converts from the view back to the view-model"
+                ),
                 viewModelAdapterTypeNames,
-                targetScript.viewModelAdapterTypeName,
+                targetScript.ViewModelAdapterTypeName,
                 newValue =>
                 {
-                    if (newValue != targetScript.viewModelAdapterTypeName)
+                    if (newValue != targetScript.ViewModelAdapterTypeName)
                     {
                         Undo.RecordObject(targetScript, "Set view-model adapter options");
-                        targetScript.viewModelAdapterOptions = null;
+                        targetScript.ViewModelAdapterOptions = null;
                     }
 
                     UpdateProperty(
-                        updatedValue => targetScript.viewModelAdapterTypeName = updatedValue,
-                        targetScript.viewModelAdapterTypeName,
+                        updatedValue => targetScript.ViewModelAdapterTypeName = updatedValue,
+                        targetScript.ViewModelAdapterTypeName,
                         newValue,
                         "Set view-model adapter"
                     );
                 }
             );
 
+            EditorStyles.label.fontStyle = viewModelAdapterOptionsPrefabModified 
+                ? FontStyle.Bold 
+                : defaultLabelStyle;
+
             Type viewModelAdapterType;
-            viewModelAdapterOptionsFade.target = ShouldShowAdapterOptions(targetScript.viewModelAdapterTypeName, out viewModelAdapterType);
+            viewModelAdapterOptionsFade.target = ShouldShowAdapterOptions(
+                targetScript.ViewModelAdapterTypeName, 
+                out viewModelAdapterType
+            );
             ShowAdapterOptionsMenu(
                 "View-model adapter options",
                 viewModelAdapterType,
-                options => targetScript.viewModelAdapterOptions = options,
-                targetScript.viewModelAdapterOptions,
+                options => targetScript.ViewModelAdapterOptions = options,
+                targetScript.ViewModelAdapterOptions,
                 viewModelAdapterOptionsFade.faded
             );
 
@@ -163,47 +232,134 @@ namespace UnityWeld_Editor
                 type => TypeResolver.FindAdapterAttribute(type).InputType == typeof(Exception)
             );
 
-            var adaptedExceptionPropertyType = AdaptTypeForward(typeof(Exception), targetScript.exceptionAdapterTypeName);
-            ShowViewModelPropertyMenu(
-                new GUIContent("Exception property", "Property on the view-model to bind the exception to."),
+            EditorStyles.label.fontStyle = exceptionPropertyPrefabModified 
+                ? FontStyle.Bold 
+                : defaultLabelStyle;
+
+            var adaptedExceptionPropertyType = AdaptTypeForward(
+                typeof(Exception), 
+                targetScript.ExceptionAdapterTypeName
+            );
+            ShowViewModelPropertyMenuWithNone(
+                new GUIContent(
+                    "Exception property", 
+                    "Property on the view-model to bind the exception to."
+                ),
                 TypeResolver.FindBindableProperties(targetScript),
-                updatedValue => targetScript.exceptionPropertyName = updatedValue,
-                targetScript.exceptionPropertyName,
-                property => property.PropertyType == adaptedExceptionPropertyType
+                updatedValue => targetScript.ExceptionPropertyName = updatedValue,
+                targetScript.ExceptionPropertyName,
+                prop => prop.PropertyType == adaptedExceptionPropertyType
             );
 
+            EditorStyles.label.fontStyle = exceptionAdapterPrefabModified 
+                ? FontStyle.Bold 
+                : defaultLabelStyle;
+
             ShowAdapterMenu(
-                new GUIContent("Exception adapter", "Adapter that handles exceptions thrown by the view-model adapter"),
+                new GUIContent(
+                    "Exception adapter", 
+                    "Adapter that handles exceptions thrown by the view-model adapter"
+                ),
                 expectionAdapterTypeNames,
-                targetScript.exceptionAdapterTypeName,
+                targetScript.ExceptionAdapterTypeName,
                 newValue =>
                 {
-                    if (newValue != targetScript.exceptionAdapterTypeName)
+                    if (newValue != targetScript.ExceptionAdapterTypeName)
                     {
                         Undo.RecordObject(targetScript, "Set exception adapter options");
-                        targetScript.exceptionAdapterOptions = null;
+                        targetScript.ExceptionAdapterOptions = null;
                     }
 
                     UpdateProperty(
-                        updatedValue => targetScript.exceptionAdapterTypeName = updatedValue,
-                        targetScript.exceptionAdapterTypeName,
+                        updatedValue => targetScript.ExceptionAdapterTypeName = updatedValue,
+                        targetScript.ExceptionAdapterTypeName,
                         newValue,
                         "Set exception adapter"
                     );
                 }
             );
 
+            EditorStyles.label.fontStyle = exceptionAdapterOptionsPrefabModified 
+                ? FontStyle.Bold 
+                : defaultLabelStyle;
+
             Type exceptionAdapterType;
-            exceptionAdapterOptionsFade.target = ShouldShowAdapterOptions(targetScript.exceptionAdapterTypeName, out exceptionAdapterType);
+            exceptionAdapterOptionsFade.target = ShouldShowAdapterOptions(
+                targetScript.ExceptionAdapterTypeName, 
+                out exceptionAdapterType
+            );
             ShowAdapterOptionsMenu(
                 "Exception adapter options",
                 exceptionAdapterType,
-                options => targetScript.exceptionAdapterOptions = options,
-                targetScript.exceptionAdapterOptions,
+                options => targetScript.ExceptionAdapterOptions = options,
+                targetScript.ExceptionAdapterOptions,
                 exceptionAdapterOptionsFade.faded
             );
 
+            EditorStyles.label.fontStyle = defaultLabelStyle;
+
             GUI.enabled = guiPreviouslyEnabled;
+        }
+
+        /// <summary>
+        /// Check whether each of the properties on the object have been changed 
+        /// from the value in the prefab.
+        /// </summary>
+        private void UpdatePrefabModifiedProperties()
+        {
+            var property = serializedObject.GetIterator();
+            // Need to call Next(true) to get the first child. Once we have it, Next(false)
+            // will iterate through the properties.
+            property.Next(true);
+            do
+            {
+                switch (property.name)
+                {
+                    case "viewEventName":
+                        viewEventPrefabModified = property.prefabOverride;
+                        break;
+
+                    case "viewPropertyName":
+                        viewPropertyPrefabModified = property.prefabOverride;
+                        break;
+
+                    case "viewAdapterTypeName":
+                        viewAdapterPrefabModified = property.prefabOverride;
+                        break;
+
+                    case "viewAdapterOptions":
+                        viewAdapterOptionsPrefabModified = property.prefabOverride;
+                        break;
+
+                    case "viewModelPropertyName":
+                        viewModelPropertyPrefabModified = property.prefabOverride;
+                        break;
+
+                    case "viewModelAdapterTypeName":
+                        viewModelAdapterPrefabModified = property.prefabOverride;
+                        break;
+
+                    case "viewModelAdapterOptions":
+                        viewModelAdapterOptionsPrefabModified = property.prefabOverride;
+                        break;
+
+                    case "exceptionPropertyName":
+                        exceptionPropertyPrefabModified = property.prefabOverride;
+                        break;
+
+                    case "exceptionAdapterTypeName":
+                        exceptionAdapterPrefabModified = property.prefabOverride;
+                        break;
+
+                    case "exceptionAdapterOptions":
+                        exceptionAdapterOptionsPrefabModified = property.prefabOverride;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+            while (property.Next(false));
         }
     }
 }

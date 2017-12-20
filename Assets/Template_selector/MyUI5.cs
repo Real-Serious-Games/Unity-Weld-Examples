@@ -31,6 +31,12 @@ public class MyUI5 : MonoBehaviour, INotifyPropertyChanged {
     {
         get
         {
+            // Lazy init
+            if (activeTab == null)
+            {
+                activeTab = NameTab;
+            }
+
             return activeTab;
         }
         set
@@ -46,11 +52,6 @@ public class MyUI5 : MonoBehaviour, INotifyPropertyChanged {
         }
     }
     private Tab activeTab = null;
-
-    void Awake()
-    {
-        ActiveTab = nameTab;
-    }
 
     [Binding]
     public void ActivateNameTab()
